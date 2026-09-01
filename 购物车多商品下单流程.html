@@ -1,0 +1,1839 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>购物车 · 多商品下单流程 H5 原型</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { width: 100%; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", "Microsoft YaHei", sans-serif;
+  font-size: 14px;
+  color: #1a1a1a;
+  background: #f1f2f4;
+  max-width: 750px;
+  margin: 0 auto;
+  position: relative;
+  padding-bottom: 112px;
+}
+
+
+
+/* ========== 购物车主页面 ========== */
+
+/* 顶部 nav */
+.cart-nav {
+  position: sticky; top: 0; z-index: 20;
+  height: 44px; padding: 0 14px;
+  display: flex; align-items: center; gap: 12px;
+  background: #fff; color: #1a1a1a;
+}
+.cart-nav .nav-title { font-size: 18px; font-weight: 700; flex: 0 0 auto; }
+.cart-nav .nav-addr {
+  flex: 1; min-width: 0;
+  display: flex; align-items: center; gap: 4px;
+  font-size: 12px; color: #888;
+}
+.cart-nav .nav-addr .pin { font-size: 13px; color: #e1251b; }
+.cart-nav .nav-addr .txt { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cart-nav .nav-right {
+  position: relative; margin-left: auto;
+  display: flex; align-items: center; gap: 14px;
+  font-size: 14px; color: #555; cursor: pointer; flex: 0 0 auto;
+}
+.cart-nav .nav-right .ic-edit { font-size: 16px; }
+.cart-nav .nav-right .ic-cart {
+  font-size: 22px; color: #1a1a1a; position: relative;
+}
+.cart-nav .nav-right .ic-cart::after {
+  content: '18';
+  position: absolute; top: -6px; right: -10px;
+  min-width: 18px; height: 18px; padding: 0 5px;
+  background: #e1251b; color: #fff; font-size: 11px;
+  border-radius: 9px; display: flex; align-items: center; justify-content: center;
+  font-weight: 600;
+}
+
+/* 商品卡片（图片样式：左 checkbox + 商品图 + 右标题/价格/数量） */
+.cart-item {
+  background: #fff;
+  margin: 0 12px 10px;
+  border-radius: 12px;
+  display: flex; align-items: stretch;
+  gap: 10px; padding: 14px;
+}
+.ci-check {
+  width: 20px; height: 20px; border-radius: 50%;
+  border: 1.5px solid #d0d0d0; flex: 0 0 auto; align-self: center;
+  display: flex; align-items: center; justify-content: center;
+  color: transparent; font-size: 12px; transition: .15s;
+}
+.ci-check.on { background: #e1251b; border-color: #e1251b; color: #fff; }
+.ci-thumb {
+  width: 72px; height: 72px; border-radius: 8px; flex: 0 0 auto;
+  background: linear-gradient(160deg, #eef2f6, #e2e8f0);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 34px; overflow: hidden;
+}
+.ci-main { flex: 1; min-width: 0; }
+.ci-head {
+  display: flex; align-items: flex-start; gap: 6px;
+}
+.ci-name {
+  font-size: 14px; font-weight: 500; color: #1a1a1a; line-height: 1.35;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  flex: 1; min-width: 0;
+}
+.ci-tag-coupon {
+  flex: 0 0 auto;
+  padding: 2px 8px; border-radius: 10px; font-size: 11px;
+  background: linear-gradient(90deg, #ff5252, #e1251b);
+  color: #fff; font-weight: 600; line-height: 1.5;
+}
+.ci-chips {
+  display: flex; gap: 8px; margin-top: 8px;
+}
+.ci-chip {
+  font-size: 11px; color: #555;
+  background: #fff; border: 0.5px solid #dcdcdc; padding: 5px 11px; border-radius: 14px;
+  display: inline-flex; align-items: center; gap: 3px;
+}
+.ci-chip .arr { font-size: 9px; color: #999; }
+.ci-recycle {
+  color: #e1251b; border-color: #ffd0c4; background: #fff5f3; font-weight: 600;
+}
+
+.ci-bottom {
+  margin-top: 12px;
+  display: flex; align-items: flex-end; justify-content: space-between;
+}
+.ci-price-left { display: flex; flex-direction: column; gap: 4px; }
+.ci-price { color: #e1251b; font-weight: 700; font-size: 18px; }
+.ci-price .sym { font-size: 13px; margin-right: 1px; }
+.ci-subsidy { font-size: 11px; color: #1a7e3a; }
+.ci-limit { font-size: 11px; color: #c25a5a; }
+
+.ci-qty {
+  display: flex; align-items: center; gap: 0;
+  border: 0.5px solid #e6e6e6; border-radius: 14px; overflow: hidden;
+}
+.ci-qty .qbtn {
+  width: 26px; height: 26px; border: 0; background: #fff; color: #555;
+  font-size: 16px; line-height: 1; cursor: pointer;
+}
+.ci-qty .qbtn:active { background: #f0f0f0; }
+.ci-qty .qbtn:disabled { opacity: .35; pointer-events: none; }
+.ci-qty .qnum { min-width: 30px; text-align: center; font-size: 13px; color: #333; }
+
+/* 底部结算栏 */
+.cart-bar {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  max-width: 750px; margin: 0 auto;
+  height: calc(56px + env(safe-area-inset-bottom));
+  background: #fff; border-top: 0.5px solid #f0f0f0;
+  display: flex; align-items: center;
+  padding: 0 12px calc(env(safe-area-inset-bottom));
+  z-index: 50;
+}
+.cart-bar .all-check {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 13px; color: #333; cursor: pointer; flex: 0 0 auto;
+}
+.cart-bar .all-check .box {
+  width: 20px; height: 20px; border-radius: 50%;
+  border: 1.5px solid #d0d0d0; display: flex; align-items: center; justify-content: center;
+  color: transparent; font-size: 12px;
+}
+.cart-bar .all-check .box.on {
+  background: #e1251b; border-color: #e1251b; color: #fff;
+}
+.cart-bar .bar-total {
+  flex: 1; min-width: 0;
+  margin-left: 10px; text-align: center;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  line-height: 1.3;
+}
+.cart-bar .bar-total .row1 { font-size: 16px; color: #1a1a1a; }
+.cart-bar .bar-total .row1 b { color: #e1251b; font-size: 20px; }
+.cart-bar .bar-total .row2 { font-size: 11px; color: #888; margin-top: 2px; }
+.cart-bar .bar-total .row2 .info { color: #e1251b; }
+.cart-bar .bar-btn {
+  flex: 0 0 auto;
+  margin-left: 10px; height: 40px; min-width: 110px; padding: 0 18px;
+  border: 0; border-radius: 20px;
+  background: linear-gradient(90deg, #ff5252, #e1251b); color: #fff;
+  font-size: 15px; font-weight: 700; cursor: pointer;
+}
+.cart-bar .bar-btn:disabled { background: #ddd; color: #fff; cursor: not-allowed; }
+
+/* ========== 滑入视图（结算页） ========== */
+.order-view {
+  position: fixed; inset: 0;
+  z-index: 300;
+  transform: translateY(100%);
+  transition: transform 0.36s cubic-bezier(0.32, 0.72, 0, 1);
+  background: #f5f5f7;
+}
+.order-view.in { transform: translateY(0); }
+.order-view.out { transform: translateY(100%); }
+
+.order-scroll {
+  position: absolute; top: 0; bottom: calc(60px + env(safe-area-inset-bottom));
+  left: 0; right: 0; max-width: 750px; margin: 0 auto;
+  overflow-y: auto; -webkit-overflow-scrolling: touch; z-index: 1;
+  background: transparent;
+}
+.order-nav {
+  position: sticky; top: 0; z-index: 5;
+  height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  background: #fff; border-bottom: 0.5px solid #f0f0f0;
+  position: -webkit-sticky;
+}
+.order-nav .back {
+  position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+  width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
+  font-size: 24px; color: #1a1a1a; cursor: pointer; border-radius: 50%;
+}
+.order-nav .title { font-size: 16px; font-weight: 600; }
+
+/* —— 以旧换新浮层（底部 sheet，按图片样式） —— */
+#recycleView {
+  position: fixed; inset: 0; max-width: 750px; margin: 0 auto;
+  background: rgba(0,0,0,0.55);
+  -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px);
+  z-index: 1100; visibility: hidden;
+  display: flex; flex-direction: column; justify-content: flex-end;
+}
+#recycleView.in  { visibility: visible; animation: tsSlideIn .36s ease forwards; }
+#recycleView.out { visibility: visible; animation: tsSlideOut .32s ease forwards; }
+@keyframes tsSlideIn  { from { transform: translateY(100%); } to { transform: translateY(0); } }
+@keyframes tsSlideOut { from { transform: translateY(0); }     to { transform: translateY(100%); } }
+
+.ts-sheet {
+  background: #f5f5f7; border-radius: 16px 16px 0 0;
+  max-height: 90vh; display: flex; flex-direction: column;
+}
+.ts-handle { width: 36px; height: 4px; border-radius: 2px; background: #d8d8d8; margin: 8px auto 0; }
+
+.ts-head {
+  position: relative; padding: 10px 14px 6px; text-align: center;
+  background: #f5f5f7; border-radius: 16px 16px 0 0;
+}
+.ts-head .ts-close {
+  position: absolute; right: 12px; top: 8px;
+  width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
+  font-size: 18px; color: #1a1a1a; cursor: pointer; line-height: 1;
+}
+.ts-title { font-size: 16px; font-weight: 700; color: #1a1a1a; margin-top: 2px; }
+.ts-subtitle { font-size: 12px; color: #888; margin-top: 4px; }
+
+/* 商品卡列表 */
+.ts-list { padding: 10px 12px 12px; overflow-y: auto; -webkit-overflow-scrolling: touch; flex: 1 1 auto; min-height: 0; }
+.ts-card {
+  background: #fff; border-radius: 12px; padding: 12px; margin-bottom: 10px;
+}
+.ts-card:last-child { margin-bottom: 0; }
+.ts-prod { display: flex; align-items: center; gap: 10px; }
+.ts-check {
+  flex-shrink: 0; width: 20px; height: 20px; border-radius: 50%;
+  background: #e1251b; color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; line-height: 1;
+}
+.ts-thumb {
+  flex-shrink: 0; width: 56px; height: 56px; border-radius: 6px;
+  background: linear-gradient(160deg, #eef2f6, #e2e8f0);
+  display: flex; align-items: center; justify-content: center; font-size: 28px;
+  overflow: hidden;
+}
+.ts-info { flex: 1; min-width: 0; }
+.ts-line1 {
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 13px; color: #1a1a1a; font-weight: 500;
+}
+.ts-line1 .qty { color: #999; font-size: 12px; font-weight: 400; flex-shrink: 0; margin-left: 6px; }
+.ts-name {
+  overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+}
+.ts-sub { font-size: 11px; color: #999; margin-top: 4px; line-height: 1.4; }
+.ts-line2 {
+  display: flex; align-items: center; justify-content: space-between; margin-top: 6px;
+}
+.ts-price {
+  color: #e1251b; font-weight: 700; font-size: 16px;
+}
+.ts-price .sym { font-size: 12px; margin-right: 1px; }
+.ts-edit-btn {
+  flex-shrink: 0; font-size: 12px; color: #555;
+  background: #fff; border: 1px solid #d0d0d0; border-radius: 14px;
+  padding: 4px 12px; cursor: pointer; font-weight: 500;
+}
+.ts-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.ts-del-btn {
+  flex-shrink: 0; font-size: 12px; color: #999;
+  background: #fff; border: 1px solid #e0e0e0; border-radius: 14px;
+  padding: 4px 12px; cursor: pointer; font-weight: 500;
+}
+.ts-del-btn:active { background: #f5f5f5; }
+.ts-empty {
+  text-align: center; color: #999; font-size: 13px;
+  padding: 40px 20px; line-height: 1.6;
+}
+
+/* 已删除的旧品卡（订单保留，可重新添加） */
+.ts-card.ts-removed { background: #fafafa; }
+.ts-check.off {
+  background: #fff; color: #bbb; border: 1px solid #e0e0e0; font-size: 15px; font-weight: 400;
+}
+.ts-removed-tip { font-size: 12px; color: #bbb; }
+.ts-add-btn {
+  flex-shrink: 0; font-size: 12px; color: #e1251b;
+  background: #fff; border: 1px solid #ffd0c4; border-radius: 14px;
+  padding: 4px 12px; cursor: pointer; font-weight: 500;
+}
+.ts-add-btn:active { background: #fff5f3; }
+
+/* 卡片下方：旧品回收返现 + 旧品数量 + key-value */
+.ts-rebate {
+  margin-top: 10px; font-size: 12px; color: #999;
+}
+.ts-rebate .v { color: #e1251b; font-weight: 600; }
+
+.ts-section-title {
+  margin-top: 12px; padding-top: 10px; border-top: 0.5px solid #f0f0f0;
+  font-size: 14px; color: #1a1a1a; font-weight: 600;
+}
+
+.ts-kv {
+  margin-top: 8px; padding: 4px 12px;
+  background: #fafafb; border-radius: 10px;
+}
+.ts-kv-row {
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 13px; padding: 11px 0; border-bottom: 0.5px solid #f0f0f0;
+}
+.ts-kv-row:last-child { border-bottom: none; }
+.ts-kv-lbl { color: #999; }
+.ts-kv-val { color: #1a1a1a; }
+.ts-kv-tag {
+  display: inline-block; margin-left: 4px; padding: 1px 5px;
+  font-size: 11px; line-height: 1.4; color: #43c114;
+  background: rgba(67, 193, 20, 0.1); border-radius: 4px;
+}
+
+/* 旧品列表（修改 / 删除 按钮置于「旧品回收信息」区内） */
+.ts-old-list { margin-top: 6px; }
+.ts-old-block { border-top: 0.5px solid #f0f0f0; padding-top: 4px; }
+.ts-old-block:first-child { border-top: none; }
+.ts-old-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 0; border-top: 0.5px solid #f0f0f0;
+}
+.ts-old-l { display: flex; flex-direction: column; min-width: 0; }
+.ts-old-name { font-size: 13px; color: #1a1a1a; font-weight: 500; }
+.ts-old-sub { font-size: 11px; color: #999; margin-top: 3px; }
+.ts-old-add {
+  margin-top: 10px; text-align: center; font-size: 13px; color: #e1251b;
+  background: #fff5f3; border: 1px dashed #ffd0c4; border-radius: 10px;
+  padding: 11px; cursor: pointer; font-weight: 500;
+}
+.ts-old-add:active { background: #ffe9e3; }
+
+/* 底部「完成（已选 N 件）」 */
+.ts-foot {
+  flex-shrink: 0; padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+  background: #fff; border-top: 0.5px solid #f0f0f0;
+}
+.ts-finish {
+  width: 100%; height: 48px; border: 0; border-radius: 24px; cursor: pointer;
+  background: linear-gradient(90deg, #ff5252 0%, #e1251b 100%);
+  color: #fff; font-size: 16px; font-weight: 700;
+}
+
+/* —— 机况评估页（与同步下单流程保持一致） —— */
+#assessView .order-scroll { bottom: calc(72px + env(safe-area-inset-bottom)); }
+
+.cond-progress { padding: 10px 16px; }
+.cond-progress-bar {
+  position: relative; height: 10px; background: #eee; border-radius: 5px; overflow: hidden;
+}
+.cond-progress-fill {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, #ffb84d 0%, #ff7800 100%);
+  border-radius: 5px; transition: width .25s ease;
+}
+.cond-progress-count {
+  position: absolute; top: 50%; right: 8px; transform: translateY(-50%);
+  font-size: 11px; color: #999; font-weight: 600; letter-spacing: 0.3px; transition: color .2s;
+}
+.cond-progress-count.on { color: #fff; }
+
+.cond-tip {
+  margin: 0 12px 12px; padding: 8px 12px;
+  background: linear-gradient(90deg, #fff3ec 0%, #fff8f0 100%);
+  border-radius: 8px; display: flex; align-items: center; gap: 8px; font-size: 12px;
+}
+.cond-tip-tag {
+  flex-shrink: 0; background: #ff7800; color: #fff;
+  padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 500;
+}
+.cond-tip-text { color: #555; flex: 1; }
+
+.cond-device {
+  padding: 4px 16px 14px;
+  display: flex; align-items: baseline; justify-content: space-between; gap: 8px;
+  font-size: 17px; font-weight: 700; color: #1a1a1a;
+}
+.cond-device-est { font-size: 15px; font-weight: 700; color: #e1251b; white-space: nowrap; }
+
+.cond-rows {
+  margin: 0 12px; background: #fff; border-radius: 10px; overflow: hidden;
+}
+.cond-row {
+  display: flex; align-items: center; padding: 14px;
+  border-bottom: 1px solid #f0f0f0; cursor: pointer; min-height: 50px;
+}
+.cond-row:last-child { border-bottom: none; }
+.cond-row-l { flex: 0 0 auto; font-size: 14px; color: #1a1a1a; font-weight: 500; }
+.cond-row-r {
+  flex: 1; min-width: 0; display: flex; align-items: center; justify-content: flex-end;
+  gap: 6px; margin-left: 12px;
+}
+.cond-row-val {
+  font-size: 13px; color: #ccc; text-align: right;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.cond-row.filled .cond-row-val { color: #1a1a1a; }
+.cond-row-edit { font-size: 14px; color: #ccc; }
+.cond-row.open .cond-row-edit { color: #ff7800; }
+
+.cond-picker { margin: 8px 12px 0; display: flex; flex-direction: column; gap: 6px; }
+.cond-option {
+  background: #fff; border: 1px solid #f0f0f0; border-radius: 8px;
+  padding: 14px 16px; text-align: center; font-size: 14px; color: #1a1a1a;
+  cursor: pointer; transition: border-color .15s, color .15s, background .15s;
+}
+.cond-option:active { background: #f7f7f7; }
+.cond-option.on { border-color: #ff7800; color: #ff7800; font-weight: 600; }
+
+.cond-bottom {
+  position: absolute; bottom: 0; left: 0; right: 0; max-width: 750px; margin: 0 auto;
+  padding: 12px 24px calc(12px + env(safe-area-inset-bottom));
+  display: flex; justify-content: center; background: #f5f5f7; z-index: 10;
+}
+.cond-pill {
+  width: 280px; height: 48px;
+  background: linear-gradient(90deg, #ffb84d 0%, #ff7800 100%);
+  color: #fff; border: none; border-radius: 24px;
+  font-size: 16px; font-weight: 600;
+  box-shadow: 0 6px 16px rgba(255, 120, 0, 0.25); cursor: pointer; transition: opacity .15s;
+}
+.cond-pill:active { opacity: 0.85; }
+
+/* ========== 以旧换新 全页面（步骤 ② 下单）—— 与「同步下单流程」以旧换新页样式一致 ========== */
+/* 顶部 nav：左返回 / 中标题 / 右关闭 —— 复用 .order-nav，仅补 close-btn 且本页改为 space-between */
+#tradeinView .order-nav { justify-content: space-between; padding: 12px 12px; height: auto; }
+/* 取消全局 .order-nav .back 的绝对定位，使本页 back/title/close 三元素均衡分布 */
+#tradeinView .order-nav .back { position: static; transform: none; }
+.order-nav .close-btn {
+  width: 30px; height: 30px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; color: #1a1a1a; cursor: pointer; border-radius: 50%;
+}
+.order-nav .close-btn:active { background: #f5f5f7; }
+
+/* 步骤进度 */
+.steps-bar { background: #fff; padding: 14px 16px 10px; display: flex; align-items: center; justify-content: center; gap: 4px; }
+.step-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #999; }
+.step-item .dot {
+  width: 18px; height: 18px; border: 1.5px solid #d0d0d0; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: #999;
+}
+.step-item.done .dot { background: #e1251b; border-color: #e1251b; color: #fff; }
+.step-item.done { color: #e1251b; font-weight: 600; }
+.step-item.active .dot { border-color: #e1251b; color: #e1251b; }
+.step-item.active { color: #e1251b; font-weight: 600; }
+.step-divider { width: 22px; height: 1.5px; background: #d0d0d0; position: relative; }
+.step-divider::before {
+  content: ''; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  width: 5px; height: 5px; background: #d0d0d0; border-radius: 50%;
+}
+.step-divider.done { background: #e1251b; }
+.step-divider.done::before { background: #e1251b; }
+
+/* 卡片 */
+.order-card { background: #fff; margin: 8px 12px 0; border-radius: 12px; padding: 14px; }
+.card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.card-head .title { font-size: 14px; font-weight: 600; color: #1a1a1a; }
+.card-head .tag { font-size: 10px; background: #ffeded; color: #e1251b; padding: 2px 6px; border-radius: 8px; font-weight: 500; }
+
+/* 新品卡 */
+.new-product { display: flex; gap: 10px; }
+.new-product .thumb {
+  width: 72px; height: 72px; flex-shrink: 0; border-radius: 8px;
+  background: linear-gradient(135deg, #fde4c0, #f5c890);
+  display: flex; align-items: center; justify-content: center; font-size: 10px; color: #8a5018; text-align: center;
+}
+.new-product .info { flex: 1; min-width: 0; }
+.new-product .name {
+  font-size: 13px; line-height: 1.4; color: #1a1a1a; margin-bottom: 6px;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.new-product .price-row { display: flex; align-items: baseline; gap: 4px; color: #e1251b; }
+.new-product .price-row .sym { font-size: 12px; }
+.new-product .price-row .num { font-size: 20px; font-weight: 700; }
+.new-product .price-row .hint {
+  font-size: 10px; background: linear-gradient(90deg, #ff5757, #e1251b); color: #fff;
+  padding: 1px 6px; border-radius: 8px; margin-left: 4px; font-weight: 600;
+}
+
+/* 价格计算 */
+.price-math {
+  margin-top: 14px; padding-top: 14px; border-top: 0.5px dashed #eee;
+  display: flex; align-items: stretch; gap: 0; font-size: 12px; color: #666;
+}
+.price-math .pm-scroll {
+  flex: 1; min-width: 0; display: flex; align-items: stretch; gap: 0;
+  overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding-right: 2px;
+}
+.price-math .pm-scroll::-webkit-scrollbar { display: none; }
+.price-math .cell { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 8px 0; }
+.price-math .pm-scroll .cell { flex: 0 0 auto; min-width: 82px; }
+.price-math .pm-op-fixed { flex-shrink: 0; }
+.price-math .cell.highlight-old {
+  flex: 0 0 auto; width: 116px; background: linear-gradient(135deg, #fff5f3, #ffece8);
+  border: 1px solid #ffb6a3; border-radius: 8px; margin: 4px -2px; padding: 8px 6px;
+}
+.price-math .cell .v { font-size: 16px; font-weight: 700; color: #1a1a1a; line-height: 1.2; }
+.price-math .cell .lbl { font-size: 11px; color: #999; margin-top: 4px; font-weight: 400; }
+.price-math .op {
+  display: flex; align-items: center; justify-content: center; font-size: 14px;
+  color: #c0c0c0; width: 16px; flex-shrink: 0; align-self: center;
+}
+.price-math .op::before { content: ''; display: block; width: 10px; height: 0; border-top: 1.5px solid #c0c0c0; }
+.price-math .cell.red .v { color: #e1251b; }
+.price-math .cell.red .lbl { color: #e1251b; font-weight: 500; }
+.price-math .cell-pair .pair-row { display: flex; align-items: center; justify-content: space-between; gap: 6px; line-height: 1.5; }
+.price-math .cell-pair .pair-row + .pair-row { border-top: 1px dashed #ffc9ba; margin-top: 4px; padding-top: 4px; }
+.price-math .cell-pair .pair-lbl { font-size: 10px; color: #e1251b; white-space: nowrap; }
+.price-math .cell-pair .pair-val { font-size: 13px; color: #e1251b; font-weight: 700; white-space: nowrap; }
+.price-math .cell-pair .pair-val.plus { font-size: 12px; }
+
+.payment-note {
+  margin-top: 10px; padding: 8px 10px; background: #fff7f3; border-radius: 6px;
+  font-size: 11px; color: #666; line-height: 1.6;
+}
+.payment-note b { color: #e1251b; }
+
+/* 旧品信息卡 */
+.old-item { display: flex; align-items: center; gap: 10px; background: #fafafb; border-radius: 10px; padding: 12px; }
+.old-item .thumb {
+  width: 56px; height: 56px; background: linear-gradient(135deg, #2a3a4a, #4a5a6a);
+  border-radius: 8px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 18px;
+}
+.old-item .info { flex: 1; }
+.old-item .name { font-size: 13px; color: #1a1a1a; margin-bottom: 4px; }
+.old-item .sub { font-size: 11px; color: #999; }
+.old-item .price-side { text-align: right; }
+.old-item .price-side .p { font-size: 16px; font-weight: 700; color: #e1251b; }
+.old-item .price-side .hint { font-size: 10px; color: #999; }
+
+/* 卡片右上角动作链接（如「修改机况」） */
+.card-action {
+  font-size: 13px; color: #555; cursor: pointer;
+  display: inline-flex; align-items: center;
+}
+.card-action:active { color: #e1251b; }
+
+/* 换新方式 —— 收款方式行（scope 以免与结算页 .pay-row 冲突） */
+#tradeinView .pay-row {
+  display: flex; align-items: center; gap: 10px; margin: 12px 14px 8px;
+  padding-bottom: 12px; border-bottom: 1px dashed #ececec;
+}
+#tradeinView .pay-row .lbl { font-size: 13px; color: #1a1a1a; font-weight: 500; }
+#tradeinView .pay-row .pay-link { margin-left: auto; display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: #1a1a1a; cursor: pointer; }
+#tradeinView .pay-row .pay-link .status { color: #999; font-size: 13px; }
+#tradeinView .pay-row .pay-link .status.filled { color: #1a1a1a; font-weight: 500; }
+#tradeinView .pay-row .pay-link .arrow { color: #c2c2c2; font-size: 16px; line-height: 1; margin-left: 2px; }
+
+/* 三 tab */
+.exchange-tabs { display: flex; border-bottom: 1px solid #f0f0f0; margin-bottom: 14px; }
+.exchange-tabs .tab {
+  flex: 1; text-align: center; font-size: 14px; color: #666;
+  padding: 8px 0 10px; cursor: pointer; position: relative; font-weight: 500; transition: color .18s;
+}
+.exchange-tabs .tab.on { color: #1a1a1a; font-weight: 600; }
+.exchange-tabs .tab.on::after {
+  content: ''; position: absolute; left: 50%; bottom: -1px; transform: translateX(-50%);
+  width: 28px; height: 3px; background: #e1251b; border-radius: 2px;
+}
+
+/* 步骤时间线 */
+.ex-steps { display: flex; align-items: flex-start; justify-content: space-between; padding: 6px 4px 14px; position: relative; }
+.ex-steps .step { flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; width: 80px; text-align: center; }
+.ex-steps .step .ic { width: 36px; height: 36px; background: #f5f5f7; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.ex-steps .step .ic svg { width: 22px; height: 22px; }
+.ex-steps .step .lbl { font-size: 11px; color: #1a1a1a; margin-top: 4px; }
+.ex-steps .dash { flex: 1; height: 1px; border-top: 1px dashed #cfcfd4; margin-top: 18px; }
+
+/* 表单 */
+.ex-form .form-row { display: flex; align-items: center; padding: 11px 0; border-bottom: 1px solid #f0f0f0; position: relative; }
+.ex-form .form-row .mark { width: 14px; height: 14px; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; margin-right: 8px; font-size: 14px; line-height: 1; }
+.ex-form .form-row .mark.required { color: #e1251b; font-weight: 700; }
+.ex-form .form-row .mark.required::before { content: '◎'; font-size: 12px; }
+.ex-form .form-row .mark.optional::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: #e1251b; display: inline-block; }
+.ex-form .form-row .f-input { flex: 1; border: none; outline: none; font-size: 13px; color: #1a1a1a; background: transparent; padding: 0; }
+.ex-form .form-row .f-input::placeholder { color: #b0b0b0; }
+.ex-form .form-row .f-static { flex: 1; font-size: 13px; color: #1a1a1a; line-height: 1.5; word-break: break-all; }
+.ex-form .form-row .f-static.muted { color: #b0b0b0; }
+.ex-form .form-row .arrow { color: #c8c8cc; font-size: 18px; margin-left: 6px; flex-shrink: 0; }
+.ex-form .form-row.has-arrow { cursor: pointer; }
+
+/* 协议 */
+.ex-submit { padding: 12px 2px; }
+.agreement { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #666; cursor: pointer; }
+.agreement input { display: none; }
+.agreement .ck-square {
+  width: 16px; height: 16px; border: 1.5px solid #c2c2c2; border-radius: 4px; flex-shrink: 0; position: relative;
+}
+.agreement input:checked + .ck-square { background: #e1251b; border-color: #e1251b; }
+.agreement input:checked + .ck-square::after {
+  content: '✓'; color: #fff; font-size: 11px; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+}
+.agreement .link { color: #e1251b; cursor: pointer; }
+
+/* 底部操作栏 */
+.order-action {
+  position: absolute; bottom: 0; left: 0; right: 0; max-width: 750px; margin: 0 auto;
+  background: #fff; display: flex; align-items: center;
+  height: calc(60px + env(safe-area-inset-bottom)); border-top: 0.5px solid #f0f0f0;
+  padding-bottom: env(safe-area-inset-bottom); z-index: 20;
+}
+.order-action .cart-btn {
+  flex: 0 0 96px; height: 60px; background: #fff; border: none; font-size: 14px;
+  color: #1a1a1a; font-weight: 500; cursor: pointer;
+}
+.order-action .buy-btn {
+  flex: 1; height: 60px; background: linear-gradient(90deg, #ff5252 0%, #e1251b 100%);
+  color: #fff; border: none; cursor: pointer; font-size: 16px; font-weight: 700; letter-spacing: 1px;
+}
+
+/* —— 以旧换新页 - 内容区底距 —— */
+#tradeinView .order-scroll { bottom: calc(60px + env(safe-area-inset-bottom)); }
+
+/* —— 收件人卡片（带邮政红蓝条纹边框）—— */
+.ck-addr-card {
+  background: #fff; margin: 8px 12px 0; border-radius: 12px;
+  padding: 14px 14px 12px;
+  position: relative;
+  border-top: 4px solid;
+  border-image: linear-gradient(90deg, #e1251b 0 50%, #2761d5 50% 100%) 1 0 0 0;
+  cursor: pointer;
+}
+.ck-addr-card .pin {
+  position: absolute; left: 14px; top: 16px;
+  width: 22px; height: 22px; border-radius: 50%;
+  background: #e1251b; color: #fff;
+  display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600;
+}
+.ck-addr-card .info {
+  margin-left: 34px;
+}
+.ck-addr-card .who {
+  font-size: 14px; color: #1a1a1a; line-height: 1.4;
+  display: flex; gap: 14px; align-items: baseline;
+}
+.ck-addr-card .who .name { font-weight: 700; }
+.ck-addr-card .who .phone { color: #1a1a1a; font-weight: 500; }
+.ck-addr-card .addr {
+  font-size: 12px; color: #666; line-height: 1.5; margin-top: 6px;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.ck-addr-card .arr {
+  position: absolute; right: 14px; top: 16px;
+  color: #c2c2c2; font-size: 18px; line-height: 1;
+}
+
+/* —— 支付方式 —— */
+.pay-row {
+  display: flex; align-items: center;
+  background: #fff; margin: 8px 12px 0; padding: 14px; border-radius: 12px;
+}
+.pay-row .label { font-size: 14px; color: #1a1a1a; }
+.pay-row .value {
+  margin-left: auto; font-size: 14px; color: #555;
+  display: flex; align-items: center; gap: 8px;
+}
+
+/* —— 结算页-商品卡片（每个商品独立，每件带服务/配送/退货运费险） —— */
+.ck-item {
+  background: #fff; margin: 8px 12px 0; border-radius: 12px; overflow: hidden;
+}
+.ck-prod {
+  display: flex; gap: 12px; padding: 14px 14px 12px; align-items: flex-start;
+}
+.ck-prod .p-thumb {
+  width: 78px; height: 78px; border-radius: 8px; flex: 0 0 auto; overflow: hidden;
+  background: linear-gradient(160deg, #eef2f6, #e2e8f0);
+  display: flex; align-items: center; justify-content: center; font-size: 36px;
+}
+.ck-prod .p-main { flex: 1; min-width: 0; position: relative; padding-right: 28px; }
+.ck-prod .p-name {
+  font-size: 14px; font-weight: 600; line-height: 1.35;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.ck-prod .p-spec { font-size: 12px; color: #999; margin-top: 4px; line-height: 1.4; }
+.ck-prod .p-foot {
+  display: flex; align-items: flex-end; justify-content: space-between; margin-top: 8px;
+}
+.ck-prod .p-price { color: #e1251b; font-weight: 700; font-size: 17px; line-height: 1.1; }
+.ck-prod .p-price .sym { font-size: 12px; }
+.ck-prod .p-chip {
+  display: inline-block; margin-top: 6px;
+  padding: 2px 8px; border-radius: 10px;
+  background: #fff0ee; color: #e1251b; font-size: 11px; font-weight: 500;
+}
+.ck-prod .p-qty {
+  position: absolute; top: 2px; right: 0;
+  font-size: 13px; color: #b4b4b4;
+}
+
+.ck-prod-extras {
+  border-top: 0.5px solid #f0f0f0;
+  padding: 12px 14px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.extra-line { display: flex; justify-content: space-between; align-items: flex-start; font-size: 13px; color: #555; }
+.extra-line .ex-key { color: #555; white-space: nowrap; }
+.extra-line .ex-val { color: #1a1a1a; margin-left: 16px; text-align: right; line-height: 1.45; }
+.extra-line .ex-val .red { color: #e1251b; font-weight: 600; }
+.extra-line .ex-val .ex-sub { display: block; color: #999; font-size: 12px; margin-top: 2px; }
+.extra-line .ex-val .arrow { color: #c2c2c2; font-size: 14px; margin-left: 4px; }
+.info-dot {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 14px; height: 14px; border-radius: 50%;
+  background: #e0e0e0; color: #fff; font-size: 10px; font-style: normal;
+  font-weight: 700; line-height: 1; margin-left: 4px; vertical-align: -2px;
+}
+
+/* —— 优惠券 / 优惠码 / 乐豆 / 备注 —— */
+.ck-section {
+  background: #fff; margin: 8px 12px 0; border-radius: 12px;
+  padding: 0 14px;
+}
+.ck-section .row {
+  display: flex; align-items: center; min-height: 46px;
+  border-bottom: 0.5px solid #f0f0f0; padding: 8px 0;
+  font-size: 14px;
+}
+.ck-section .row:last-child { border-bottom: 0; }
+.ck-section .row .label { color: #1a1a1a; flex: 0 0 auto; margin-right: 12px; }
+.ck-section .row .value {
+  margin-left: auto; display: flex; align-items: center; gap: 6px;
+}
+.ck-section .row .value .red { color: #e1251b; font-weight: 600; }
+.ck-section .row .value .arrow { color: #c2c2c2; font-size: 14px; }
+.ck-section .row .value input {
+  border: 0; outline: 0; font-size: 13px; color: #555;
+  background: transparent; text-align: right; min-width: 140px;
+}
+.ck-section .row .value input::placeholder { color: #b4b4b4; }
+
+.tag-chip {
+  display: inline-block; padding: 1px 6px; border-radius: 8px;
+  background: linear-gradient(90deg, #ff5252, #e1251b);
+  color: #fff; font-size: 11px; font-weight: 500; margin-right: 4px;
+}
+.tag-line { font-size: 11px; color: #999; }
+
+.lebo-row {
+  background: #f7f7f7; border-radius: 8px; padding: 10px 12px;
+  margin: 8px 0 4px; display: flex; align-items: center; gap: 10px;
+  font-size: 12px; color: #666;
+}
+.lebo-row .num {
+  background: #fff; border-radius: 6px; padding: 4px 8px; font-weight: 600; color: #333;
+}
+.lebo-row .dis { margin-left: auto; color: #1a1a1a; font-size: 14px; font-weight: 700; }
+
+/* Toggle switch */
+.switch {
+  position: relative; width: 38px; height: 22px; border-radius: 11px;
+  background: #dcdcdc; cursor: pointer; transition: .2s; flex: 0 0 auto;
+}
+.switch::after {
+  content: ''; position: absolute; top: 2px; left: 2px;
+  width: 18px; height: 18px; border-radius: 50%; background: #fff;
+  transition: .2s;
+}
+.switch.on { background: #e1251b; }
+.switch.on::after { left: 18px; }
+
+/* 备注 */
+.ck-section.remark .row { padding: 10px 0; min-height: 50px; }
+.ck-section.remark input {
+  border: 0; outline: 0; font-size: 13px; color: #555;
+  background: transparent; width: 100%;
+}
+.ck-section.remark input::placeholder { color: #b4b4b4; }
+
+/* —— 底部操作栏 —— */
+.checkout-action {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  max-width: 750px; margin: 0 auto; background: #fff;
+  display: flex; align-items: center;
+  height: calc(56px + env(safe-area-inset-bottom));
+  padding: 0 14px calc(env(safe-area-inset-bottom));
+  border-top: 0.5px solid #f0f0f0; z-index: 20;
+}
+.checkout-action .pay-box {
+  flex: 1; text-align: right; padding-right: 14px;
+}
+.checkout-action .pay-box .line1 { font-size: 13px; color: #333; }
+.checkout-action .pay-box .line1 b { color: #e1251b; font-size: 19px; margin: 0 2px; }
+.checkout-action .pay-box .line2 { font-size: 11px; color: #888; margin-top: 2px; }
+.checkout-action .pay-box .line2 .red { color: #e1251b; }
+.checkout-action .submit {
+  flex: 0 0 130px; height: 42px; border: 0; cursor: pointer; border-radius: 21px;
+  background: linear-gradient(90deg, #ff5252, #e1251b);
+  color: #fff; font-size: 16px; font-weight: 700;
+}
+
+/* —— Toast —— */
+#toast {
+  position: fixed; left: 50%; bottom: 110px; transform: translateX(-50%);
+  background: rgba(0,0,0,.8); color: #fff; font-size: 13px;
+  padding: 10px 18px; border-radius: 20px; z-index: 9999;
+  opacity: 0; pointer-events: none; transition: opacity .2s; white-space: nowrap;
+}
+#toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+
+  <!-- ============ 购物车主页面 ============ -->
+  <div class="cart-nav">
+    <span class="nav-title">购物车</span>
+    <span class="nav-addr"><span class="pin">📍</span><span class="txt">配送至:北京市北京市海...</span></span>
+    <span class="nav-right">
+      <span class="ic-edit" onclick="showToast('编辑模式')">编辑</span>
+      <span class="ic-cart">🛒</span>
+    </span>
+  </div>
+
+  <!-- 商品列表 -->
+  <div id="cartList"></div>
+
+  <!-- 底部结算栏 -->
+  <div class="cart-bar">
+    <div class="all-check" id="allCheck">
+      <span class="box" id="allBox">✓</span>
+      <span>全选</span>
+    </div>
+    <div class="bar-total">
+      <div class="row1">实付款：<b><span style="font-size:13px;">¥</span><span id="cartBarTotal">0</span></b></div>
+      <div class="row2">节省了：<span class="info" id="cartSaved">¥100</span> 优惠明细 ⓘ</div>
+    </div>
+    <button class="bar-btn" id="barBtn">结算</button>
+  </div>
+
+  <!-- ============ 确认订单页（结算中心） ============ -->
+  <div class="order-view" id="checkoutView">
+    <div class="order-scroll">
+      <div class="order-nav">
+        <span class="back" id="ckBack">‹</span>
+        <span class="title">结算中心</span>
+      </div>
+
+      <!-- 收件人（带邮政红蓝条纹） -->
+      <div class="ck-addr-card" id="ckAddr">
+        <span class="pin">📍</span>
+        <div class="arr">›</div>
+        <div class="info">
+          <div class="who"><span class="name">收货人,毕维芸</span><span class="phone">158****5479</span></div>
+          <div class="addr">收货地址:北京市北京市海淀区马连洼街道邮局背面<br>西三路在联想总部-东区附近</div>
+        </div>
+      </div>
+
+      <!-- 支付方式 -->
+      <div class="pay-row" id="ckPayMethod">
+        <span class="label">支付方式</span>
+        <span class="value">在线支付 <span style="color:#c2c2c2;font-size:16px;">›</span></span>
+      </div>
+
+      <!-- 商品1 -->
+      <div class="ck-item" id="ckList"><!-- JS 渲染 --></div>
+
+      <!-- 发票 / 优惠券 / 优惠码 / 乐豆 -->
+      <div class="ck-section">
+        <div class="row" id="ckInvoice">
+          <span class="label">发票</span>
+          <span class="value">
+            <span style="color:#e1251b;font-weight:600;">电子（个人）</span>
+            <span class="arrow">›</span>
+          </span>
+        </div>
+        <div class="row" id="ckCoupon">
+          <span class="label">优惠券</span>
+          <span class="value">
+            <span class="tag-chip">已选择可以使用</span>
+            <span style="color:#1a1a1a;">优惠100元</span>
+            <span class="arrow">›</span>
+          </span>
+        </div>
+        <div class="row" id="ckRecycle">
+          <span class="label">以旧换新</span>
+          <span class="value">
+            <span class="tag-chip" id="ckRecycleTag">旧机返 ¥8,250</span>
+            <span class="arrow">›</span>
+          </span>
+        </div>
+        <div class="row">
+          <span class="label">优惠码</span>
+          <span class="value">
+            <input placeholder="请输入优惠码" />
+            <span class="arrow">›</span>
+          </span>
+        </div>
+        <div class="row" id="ckLeBoRow">
+          <span class="label" style="display:flex;flex-direction:column;line-height:1.45;">
+            <span>乐豆 <span style="color:#888;font-weight:400;">共1473乐豆</span></span>
+            <span style="color:#888;">可用1400乐豆，抵 <span style="color:#e1251b;">¥14</span></span>
+          </span>
+          <span class="value">
+            <span style="background:#fff;padding:3px 8px;border-radius:6px;color:#333;">1400</span>
+            <span style="color:#e1251b;font-weight:700;">抵 ¥14</span>
+            <span class="switch" id="leboSwitch"></span>
+          </span>
+        </div>
+      </div>
+
+      <!-- 订单备注 -->
+      <div class="ck-section remark">
+        <div class="row" style="align-items:flex-start;padding:12px 0;">
+          <span class="label" style="margin-top:5px;">订单备注</span>
+          <input placeholder="给商家留言（选填，100字以内）" />
+        </div>
+      </div>
+
+      <div style="height:24px;"></div>
+    </div>
+
+    <!-- 底部固定栏 -->
+    <div class="checkout-action">
+      <div class="pay-box">
+        <div class="line1">实付款：<b>¥</b><b id="ckPay">0</b></div>
+        <div class="line2">预估旧机返 <span class="red">¥<span id="ckRefundOld">0</span></span>，换新补贴 <span class="red">¥<span id="ckSubsidy">260</span></span></div>
+      </div>
+      <button class="submit" id="ckSubmitBtn">提交订单</button>
+    </div>
+  </div>
+
+  <!-- ============ 以旧换新浮层（底部 sheet） ============ -->
+  <div id="recycleView">
+    <div class="ts-sheet" id="tsSheet">
+      <div class="ts-handle"></div>
+
+      <div class="ts-head">
+        <span class="ts-close" id="tsClose">×</span>
+        <div class="ts-title">以下商品支持以旧换新</div>
+        <div class="ts-subtitle">支持多品类旧品询价换购新品</div>
+      </div>
+
+      <div class="ts-list" id="tsList"><!-- JS 渲染 --></div>
+
+      <div class="ts-foot">
+        <button class="ts-finish" id="tsFinish">完成（已选 <span id="tsCount">0</span> 件）</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 机况评估页 ============ -->
+  <div class="order-view" id="assessView">
+    <div class="order-scroll">
+      <div class="order-nav">
+        <span class="back" id="assessBack">‹</span>
+        <span class="title">机况评估</span>
+      </div>
+      <div id="assessBody"><!-- JS 渲染 --></div>
+    </div>
+    <div class="cond-bottom">
+      <button class="cond-pill" id="assessQuote">获取估价</button>
+    </div>
+  </div>
+
+  <!-- ============ 以旧换新 全页面（步骤 ② 下单） ============ -->
+  <div class="order-view" id="tradeinView">
+    <div class="order-scroll">
+      <!-- 顶部 nav -->
+      <div class="order-nav">
+        <div class="back" id="tiBack">‹</div>
+        <div class="title">以旧换新</div>
+        <div class="close-btn" id="tiClose">×</div>
+      </div>
+
+      <!-- 步骤进度 -->
+      <div class="steps-bar">
+        <div class="step-item done">
+          <div class="dot">✓</div>
+          <span>选择旧品</span>
+        </div>
+        <div class="step-divider done"></div>
+        <div class="step-item active">
+          <div class="dot">2</div>
+          <span>下单</span>
+        </div>
+        <div class="step-divider"></div>
+        <div class="step-item">
+          <div class="dot">3</div>
+          <span>取旧送新</span>
+        </div>
+      </div>
+
+      <!-- 新品 -->
+      <div class="order-card">
+        <div class="card-head">
+          <div class="title">新品</div>
+          <div class="tag">国补推荐</div>
+        </div>
+        <div class="new-product">
+          <div class="thumb" id="tiNewThumb">ThinkBook<br>16p</div>
+          <div class="info">
+            <div class="name" id="tiNewName">联想 ThinkBook 16+ 2026 酷睿Ultra X7 AI全能本</div>
+            <div class="price-row">
+              <span class="sym">¥</span>
+              <span class="num" id="tiNewPrice">9,929</span>
+              <span class="hint">预估国补后优惠换新价</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 价格计算 -->
+        <div class="price-math">
+          <div class="pm-scroll">
+            <div class="cell">
+              <div class="v"><span class="sym">¥</span><span id="tiSingle">12,999</span></div>
+              <div class="lbl">单品购买</div>
+            </div>
+            <span class="op"></span>
+            <div class="cell">
+              <div class="v"><span class="sym">¥</span>260</div>
+              <div class="lbl">优惠券</div>
+            </div>
+            <span class="op"></span>
+            <div class="cell">
+          <div class="v"><span class="sym">¥</span>300</div>
+          <div class="lbl">教育认证优惠</div>
+            </div>
+            <span class="op"></span>
+            <div class="cell red">
+              <div class="v"><span class="sym">¥</span>1,500</div>
+              <div class="lbl">国家补贴</div>
+            </div>
+          </div>
+          <span class="op pm-op-fixed"></span>
+          <div class="cell highlight-old cell-pair">
+            <div class="pair-row">
+              <span class="pair-lbl">旧品抵扣</span>
+              <span class="pair-val" id="tiOldDed">¥8,250</span>
+            </div>
+            <div class="pair-row">
+              <span class="pair-lbl">换新补贴</span>
+              <span class="pair-val plus">+¥260</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="payment-note">
+          本次支付预估 <b id="tiFinal">¥4,649</b>（领国补可减 <b>¥1,500</b>，教育认证减 <b>¥300</b>）；<br>
+          回收旧机再反<b id="tiRefund">¥8,510</b>：旧机抵扣金额<b id="tiRefundOld">¥8,250</b>（旧机回收成功后发放）+换新补贴金额<b>¥260</b>（新机签收15天后发放）
+        </div>
+      </div>
+
+      <!-- 旧品信息（展示不可选择） -->
+      <div class="order-card">
+        <div class="card-head">
+          <div class="title">旧品信息</div>
+          <span class="card-action" id="tiEditCondition" onclick="editConditionFromTradein()">修改机况 ›</span>
+        </div>
+        <div class="old-item">
+          <div class="thumb">📱</div>
+          <div class="info">
+            <div class="name" id="tiOldName">iPhone 14 Pro · 华为 Mate 60 Pro · 小米 13</div>
+            <div class="sub" id="tiOldSpec">95新 / 9成新 / 9成新 · 共 3 件</div>
+          </div>
+          <div class="price-side">
+            <div class="p" id="tiOldPrice">¥8,250</div>
+            <div class="hint">回收后返</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 换新方式 -->
+      <div class="order-card">
+        <div class="card-head">
+          <div class="title">换新方式</div>
+        </div>
+
+        <!-- 收款方式：置于「换新方式」字眼下方、tab 签之上 -->
+        <div class="pay-row" id="tiPayRow">
+          <span class="lbl">收款方式</span>
+          <span class="pay-link">
+            <span class="status" id="tiPayStatus">请填写支付宝账号</span>
+            <span class="arrow">›</span>
+          </span>
+        </div>
+
+        <!-- 三 tab -->
+        <div class="exchange-tabs" id="tiTabs">
+          <div class="tab on" data-tab="home">上门回收</div>
+          <div class="tab" data-tab="mail">邮寄回收</div>
+        </div>
+
+        <!-- 步骤时间线 -->
+        <div class="ex-steps">
+          <div class="step">
+            <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#7e7e7e" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.2"/><path d="M5.5 19.5c.8-3.4 3.5-5.2 6.5-5.2s5.7 1.8 6.5 5.2"/><path d="M9.2 5l1.3-1.3M14.8 5l-1.3-1.3" /></svg></div>
+            <div class="lbl">工程师上门</div>
+          </div>
+          <span class="dash"></span>
+          <div class="step">
+            <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#7e7e7e" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v5c0 4.4-3.2 8.6-8 10-4.8-1.4-8-5.6-8-10V6l8-3z"/><path d="M9 12l2 2 4-4"/></svg></div>
+            <div class="lbl">当面验机</div>
+          </div>
+          <span class="dash"></span>
+          <div class="step">
+            <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#7e7e7e" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v11a2 2 0 002 2h14a2 2 0 002-2v-9h-4a2 2 0 010-4h4V5a2 2 0 00-2-2H5a2 2 0 00-2 2v2"/><circle cx="16" cy="13" r="1.3" fill="#7e7e7e" stroke="none"/></svg></div>
+            <div class="lbl">确认回收</div>
+          </div>
+        </div>
+
+        <!-- 表单：上门 -->
+        <div class="ex-form" id="tiFormHome">
+          <div class="form-row">
+            <span class="mark required"></span>
+            <input class="f-input" placeholder="请输入联系人姓名" />
+          </div>
+          <div class="form-row">
+            <span class="mark optional"></span>
+            <input class="f-input" value="15810525479" />
+          </div>
+          <div class="form-row has-arrow addr">
+            <span class="mark optional"></span>
+            <div class="f-static">北京市 北京市 海淀区 马连洼街道 软件园西三路在联想总部(北京)园区 附近</div>
+            <span class="arrow">›</span>
+          </div>
+        </div>
+
+        <!-- 协议 -->
+        <div class="ex-submit">
+          <label class="agreement">
+            <input type="checkbox" id="tiAgree" />
+            <span class="ck-square"></span>
+            <span class="agree-txt">我已经阅读并同意<a class="link" href="https://huishou.lenovo.com.cn/tradeagreement" target="_blank" rel="noopener" onclick="event.preventDefault();event.stopPropagation();window.open('https://huishou.lenovo.com.cn/tradeagreement','_blank');">联想以旧换新协议</a></span>
+          </label>
+        </div>
+      </div>
+
+      <div style="height:24px;"></div>
+    </div>
+
+    <!-- 底部按钮 -->
+    <div class="order-action">
+      <button class="buy-btn" id="tiBtnSubmit">立即换新</button>
+    </div>
+  </div>
+
+  <!-- ============ Toast ============ -->
+  <div id="toast"></div>
+
+<script>
+/* ============ 数据 ============ */
+const PRODUCTS = [
+  {
+    id: 'p1', emoji: '💻',
+    name: '联想ThinkBook 16+ 2026 酷睿Ultra X7 AI全能本 0…',
+    coupon: '领券',
+    price: 12999,
+    qty: 1,
+    limit: '限购2件',
+    subsidy: '国家补贴，至高减15%',
+    checked: true,
+    // 结算页配置
+    model: '联想ThinkBook 16+ 2026 酷睿Ultra X7 AI全能本 08CD',
+    spec: '英特尔酷睿Ultra X7 358H/Windows 1…',
+    shipEta: '16:00点前完成下单，预计后天（8月30日）送达，定制品需再加 3 个工作日',
+  },
+  {
+    id: 'p2', emoji: '🖥️',
+    name: '【专业电竞】拯救者刃7000K 超能版 英特尔酷睿Ultra 7 5070…',
+    coupon: '领券',
+    price: 15499,
+    qty: 1,
+    limit: '限购2件',
+    subsidy: '国家补贴，至高减15%',
+    checked: true,
+    model: '【专业电竞】拯救者刃7000K 超能版 英特尔酷睿Ultra 7 5070游戏…',
+    spec: '英特尔酷睿Ultra 7 257HX ｜Windows …',
+    shipEta: '16:00点前完成下单，预计 8月31日送达，定制品需再加 3 个工作日',
+  },
+  {
+    id: 'p3', emoji: '🎮',
+    name: '联想 拯救者 R9000P 2026 RTX5070 游戏本 锐龙9 HX…',
+    coupon: '领券',
+    price: 7999,
+    qty: 1,
+    limit: '限购2件',
+    subsidy: '国家补贴，至高减15%',
+    checked: true,
+    model: '联想 拯救者 R9000P 2026 RTX5070 游戏本 锐龙9 HX…',
+    spec: 'AMD 锐龙9 8945HX ｜Windows 1…',
+    shipEta: '16:00点前完成下单，预计 9月1日送达，定制品需再加 3 个工作日',
+  }
+];
+const COUPON = 100;       // 优惠
+const TOTAL = 12999 + 15499 + 7999; // 商品金额 36497
+const FINAL = TOTAL - COUPON; // 实付 36397
+
+function fmt(n){ return n.toLocaleString('en-US'); }
+
+/* ============ 以旧换新 / 机况评估 数据 ============ */
+const RECYCLE = [
+  {
+    id: 'r1', emoji: '📱', name: 'iPhone 14 Pro', spec: '256G · 深空黑 · 95新',
+    base: 3750,
+    sel: { screen: -1, body: -1, battery: -1, func: -1 }, // -1 表示未评估；>=0 为已选项索引
+  },
+  {
+    id: 'r2', emoji: '📱', name: '华为 Mate 60 Pro', spec: '512G · 雅川青 · 9成新',
+    base: 2600,
+    sel: { screen: -1, body: -1, battery: -1, func: -1 },
+  },
+  {
+    id: 'r3', emoji: '📱', name: '小米 13', spec: '256G · 白色 · 9成新',
+    base: 1900,
+    sel: { screen: -1, body: -1, battery: -1, func: -1 },
+  },
+];
+// 旧品以「挂载在新品下」的方式管理：每个新品 p.olds 为其参与以旧换新的旧品列表
+// 旧品数量上限 = 该新品 qty（最多 2 件）；默认 1 件。
+function cloneOld(src, productId, id){
+  return {
+    id, productId,
+    emoji: src.emoji, name: src.name, spec: src.spec, base: src.base,
+    sel: { screen: -1, body: -1, battery: -1, func: -1 },
+    selected: true
+  };
+}
+function initTradeinOlds(){
+  PRODUCTS.forEach((p, i) => {
+    p.olds = [ cloneOld(RECYCLE[i % RECYCLE.length], p.id, 'o' + p.id + '_1') ];
+  });
+}
+function findOld(id){
+  for (const p of PRODUCTS){
+    const o = (p.olds || []).find(x => x.id === id);
+    if (o) return o;
+  }
+  return null;
+}
+function addOldToProduct(pid){
+  const p = PRODUCTS.find(x => x.id === pid);
+  const tpl = RECYCLE[(p.olds.length) % RECYCLE.length];
+  const id = 'o' + p.id + '_' + (p.olds.length + 1);
+  const o = cloneOld(tpl, p.id, id);
+  p.olds.push(o);
+  return o;
+}
+initTradeinOlds();
+// 机况评估维度与选项（v 为价格影响，<=0 表示扣减）
+const ASSESS_ITEMS = [
+  { key: 'screen',  label: '屏幕显示', options: [
+    { t: '完美无划痕', v: 0 },
+    { t: '轻微划痕', v: -150 },
+    { t: '明显划痕/碎裂', v: -500 },
+  ]},
+  { key: 'body',    label: '机身外观', options: [
+    { t: '无磕碰', v: 0 },
+    { t: '轻微磕碰', v: -120 },
+    { t: '明显磕碰/变形', v: -400 },
+  ]},
+  { key: 'battery', label: '电池健康', options: [
+    { t: '90% 以上', v: 0 },
+    { t: '80% - 90%', v: -100 },
+    { t: '80% 以下', v: -300 },
+  ]},
+  { key: 'func',    label: '功能情况', options: [
+    { t: '全部正常', v: 0 },
+    { t: '部分异常', v: -250 },
+  ]},
+];
+const SUBSIDY = 260; // 换新补贴
+const COND_ORDER = ASSESS_ITEMS.map(i => i.key);
+
+function computeEst(r){
+  let est = r.base;
+  ASSESS_ITEMS.forEach(it => { est += it.options[Math.max(0, r.sel[it.key])].v; });
+  return est;
+}
+function recycleTotal(){
+  return visibleRecycles().reduce((s, x) => s + computeEst(x.r), 0);
+}
+
+/* ============ 购物车渲染 ============ */
+const cartList = document.getElementById('cartList');
+const cartBarTotal = document.getElementById('cartBarTotal');
+const cartSaved = document.getElementById('cartSaved');
+const barBtn = document.getElementById('barBtn');
+const allBox = document.getElementById('allBox');
+
+function renderCart(){
+  let html = PRODUCTS.map(p => `
+    <div class="cart-item" data-id="${p.id}">
+      <div class="ci-check ${p.checked?'on':''}" onclick="toggleItem('${p.id}')"><span>✓</span></div>
+      <div class="ci-thumb">${p.emoji}</div>
+      <div class="ci-main">
+        <div class="ci-head">
+          <div class="ci-name">${p.name}</div>
+          ${p.coupon ? `<span class="ci-tag-coupon">${p.coupon}</span>` : ''}
+        </div>
+        <div class="ci-chips">
+          <span class="ci-chip">选择服务 <span class="arr">▼</span></span>
+          <span class="ci-chip">选择选件 <span class="arr">▼</span></span>
+          <span class="ci-chip ci-recycle" onclick="openRecycle()">以旧换新 <span class="arr">›</span></span>
+        </div>
+        <div class="ci-bottom">
+          <div class="ci-price-left">
+            <span class="ci-price"><span class="sym">¥</span>${fmt(p.price)}</span>
+            <span class="ci-subsidy">${p.subsidy}</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+            <div class="ci-qty">
+              <button class="qbtn" onclick="changeQty('${p.id}',-1)">−</button>
+              <span class="qnum">${p.qty}</span>
+              <button class="qbtn" onclick="changeQty('${p.id}',1)" ${p.qty >= 2 ? 'disabled' : ''}>+</button>
+            </div>
+            <span class="ci-limit">${p.limit}</span>
+          </div>
+        </div>
+      </div>
+    </div>`).join('');
+  cartList.innerHTML = html;
+
+  // 合计：所有商品的选中合计 - 优惠
+  const sel = PRODUCTS.filter(p => p.checked);
+  const sum = sel.reduce((s, p) => s + p.price * p.qty, 0);
+  cartBarTotal.textContent = fmt(FINAL); // 固定显示实付28398（与截图一致）
+  cartSaved.textContent = '¥' + fmt(COUPON);
+
+  const count = sel.length;
+  barBtn.textContent = '结算' + (count ? `(${count})` : '');
+  barBtn.disabled = count === 0;
+  allBox.classList.toggle('on', PRODUCTS.every(p => p.checked));
+  // 同步结算中心以旧换新标签（购物车勾选变化时实时更新数量与金额）
+  updateRecycleChip();
+}
+
+function toggleItem(id){
+  const p = PRODUCTS.find(x => x.id === id);
+  p.checked = !p.checked;
+  renderCart();
+}
+function changeQty(id, d){
+  const p = PRODUCTS.find(x => x.id === id);
+  // 单商品数量：最少 1，最多 2
+  p.qty = Math.min(2, Math.max(1, p.qty + d));
+  renderCart();
+}
+function toggleAll(){
+  const allOn = PRODUCTS.every(p => p.checked);
+  PRODUCTS.forEach(p => p.checked = !allOn);
+  renderCart();
+}
+document.getElementById('allCheck').addEventListener('click', toggleAll);
+barBtn.addEventListener('click', openCheckout);
+
+/* ============ 确认订单页（结算中心） ============ */
+const checkoutView = document.getElementById('checkoutView');
+const ckList = document.getElementById('ckList');
+
+function openCheckout(){
+  const sel = PRODUCTS.filter(p => p.checked);
+  if (!sel.length){ showToast('请先选择商品'); return; }
+
+  // 渲染商品（按图片：每个商品独立卡片，每个含 服务/配送/退货运费险）
+  let html = sel.map(p => `
+    <div class="ck-prod">
+      <div class="p-thumb">${p.emoji}</div>
+      <div class="p-main">
+        <div class="p-name">${p.model}</div>
+        <div class="p-spec">${p.spec}</div>
+        <div class="p-foot">
+          <div>
+            <div class="p-price"><span class="sym">¥</span>${fmt(p.price)}</div>
+            <span class="p-chip">支持14天无忧退换</span>
+          </div>
+        </div>
+        <span class="p-qty">x${p.qty}</span>
+      </div>
+    </div>
+    <div class="ck-prod-extras">
+      <div class="extra-line"><span class="ex-key">服务</span><span class="ex-val">可选增值服务 <span class="arrow">›</span></span></div>
+      <div class="extra-line"><span class="ex-key">配送</span><span class="ex-val"><b>快递配送</b><span class="ex-sub">${p.shipEta}</span></span></div>
+      <div class="extra-line"><span class="ex-key">退货运费险<i class="info-dot">!</i></span><span class="ex-val"><span class="red">商家赠送</span><span class="ex-sub">售后有效期内申请退货享运费补贴</span></span></div>
+    </div>
+  `).join('');
+  ckList.innerHTML = html;
+
+  const recs = visibleRecycles();
+  const totalEst = recs.reduce((s, x) => s + computeEst(x.r), 0);
+  const subsTotal = recs.length * SUBSIDY; // 换新补贴 = 所有旧机补贴相加
+  document.getElementById('ckPay').textContent = fmt(FINAL);
+  document.getElementById('ckRefundOld').textContent = fmt(totalEst);
+  document.getElementById('ckSubsidy').textContent = fmt(subsTotal);
+
+  checkoutView.classList.add('in');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeCheckout(){
+  checkoutView.classList.remove('in');
+  checkoutView.classList.add('out');
+  setTimeout(() => { checkoutView.classList.remove('out'); document.body.style.overflow = ''; }, 360);
+  // 退出结算页：清空当次以旧换新操作，下次进入重新计算
+  resetTradeinState();
+}
+
+// 重置以旧换新当次状态：每个新品恢复默认 1 件旧品、刷新结算标签
+function resetTradeinState(){
+  PRODUCTS.forEach((p, i) => {
+    p.olds = [ cloneOld(RECYCLE[i % RECYCLE.length], p.id, 'o' + p.id + '_1') ];
+  });
+  updateRecycleChip();
+}
+document.getElementById('ckBack').addEventListener('click', closeCheckout);
+
+/* ============ 以旧换新浮层（底部 sheet，按参考图） ============ */
+const recycleView = document.getElementById('recycleView');
+const tsList = document.getElementById('tsList');
+const tsCount = document.getElementById('tsCount');
+
+// 当前应展示的旧品：购物车已勾选 且 未被删除（仅取前 qty 个旧品位）
+function visibleRecycles(){
+  const res = [];
+  PRODUCTS.forEach(p => {
+    if (!p.checked) return;
+    (p.olds || []).slice(0, p.qty).forEach(o => { if (o.selected) res.push({ p, r: o }); });
+  });
+  return res;
+}
+
+// 单件旧品：名称 + 预估回收价 + 修改/删除，下方带该旧品独立的「旧品回收信息」栏
+function oldBlock(p, o){
+  const est = computeEst(o);
+  return `
+      <div class="ts-old-block">
+        <div class="ts-old-item">
+          <div class="ts-old-l">
+            <span class="ts-old-name">${o.name}</span>
+            <span class="ts-old-sub">预估回收价 ¥${fmt(est)}，换新补贴 ¥${fmt(SUBSIDY)}</span>
+          </div>
+          <div class="ts-actions">
+            <span class="ts-edit-btn" onclick="editTradein('${o.id}')">修改</span>
+            <span class="ts-del-btn" onclick="removeRecycle('${o.id}')">删除</span>
+          </div>
+        </div>
+        <div class="ts-kv">
+          <div class="ts-kv-row"><span class="ts-kv-lbl">收款账号</span><span class="ts-kv-val">158****5479</span></div>
+          <div class="ts-kv-row"><span class="ts-kv-lbl">回收方式</span><span class="ts-kv-val">上门回收</span></div>
+          <div class="ts-kv-row"><span class="ts-kv-lbl">地址</span><span class="ts-kv-val">北京市 海淀区 马连洼街道 软件园西三路 联想总部(北京)园区 附近</span></div>
+          <div class="ts-kv-row"><span class="ts-kv-lbl">时间</span><span class="ts-kv-val">8月31日<span class="ts-kv-tag">[周一]</span></span></div>
+        </div>
+      </div>`;
+}
+
+// 浮窗：每个勾选新品 = 一张以旧换新订单（回收单分开放），数量上限 = 该新品 qty
+function renderRecycle(){
+  const checked = PRODUCTS.filter(p => p.checked);
+  if (!checked.length){
+    tsList.innerHTML = '<div class="ts-empty">暂无旧品<br>请在购物车勾选参与以旧换新的商品</div>';
+    tsCount.textContent = 0;
+    return;
+  }
+  let html = '';
+  checked.forEach(p => {
+    // 该新品已选旧品（最多 p.qty 件）
+    const olds = (p.olds || []).filter(o => o.selected);
+    const oldCount = olds.length;
+    const estForP = olds.reduce((s, o) => s + computeEst(o), 0);
+    // 旧品数量 < 新品数量：展示「添加旧品」；相等则不展示
+    const showAdd = oldCount < p.qty;
+
+    html += `
+      <div class="ts-card">
+        <div class="ts-prod">
+          <div class="ts-check">✓</div>
+          <div class="ts-thumb">${p.emoji}</div>
+          <div class="ts-info">
+            <div class="ts-line1">
+              <span class="ts-name">${p.model}</span>
+              <span class="qty">×${p.qty}</span>
+            </div>
+            <div class="ts-sub">${p.spec}</div>
+            <div class="ts-line2">
+              <span class="ts-price"><span class="sym">¥</span>${fmt(p.price)}</span>
+            </div>
+          </div>
+        </div>
+        <div class="ts-rebate">旧品回收后返<span class="v"> ¥${fmt(estForP)}</span>，换新补贴<span class="v"> ¥${fmt(oldCount * SUBSIDY)}</span></div>
+        <div class="ts-section-title">旧品回收信息</div>
+        <div class="ts-old-list">
+          ${olds.map(o => oldBlock(p, o)).join('')}
+        </div>
+        ${showAdd ? `<div class="ts-old-add" onclick="addAndAssessNew('${p.id}')">+ 添加旧品</div>` : ''}
+      </div>`;
+  });
+  tsList.innerHTML = html;
+  tsCount.textContent = visibleRecycles().length;
+}
+
+// 删除某旧品（软删除：保留订单记录，可重新添加）
+function removeRecycle(id){
+  const r = findOld(id);
+  if (r) r.selected = false;
+  renderRecycle();
+  updateRecycleChip();
+}
+
+// 空位添加新机：为某新品新建一件旧品 → 关闭浮窗 → 进入机况评估页
+function addAndAssessNew(pid){
+  const o = addOldToProduct(pid);
+  updateRecycleChip();
+  closeRecycle();
+  openAssess(o.id);
+}
+
+// 修改旧品 → 关闭浮窗并进入以旧换新全页面
+function editTradein(id){
+  tradeinOwnerId = id; // 标记当前修改的旧品，使全页新品信息对齐该新品
+  renderTradein();
+  closeRecycle();
+  openTradein();
+}
+
+// 同步结算中心「以旧换新」标签
+function updateRecycleChip(){
+  const vis = visibleRecycles();
+  const total = vis.reduce((s, x) => s + computeEst(x.r), 0);
+  const tag = document.getElementById('ckRecycleTag');
+  tag.textContent = vis.length
+    ? ('已选 ' + vis.length + ' 件 · 旧机抵扣 ¥' + fmt(total))
+    : '以旧换新';
+}
+
+function openRecycle(){
+  // 当次进入不重置：保留在结算页内的删除/添加操作（含地址提示条状态）
+  renderRecycle();
+  recycleView.classList.remove('out');
+  recycleView.classList.add('in');
+  document.body.style.overflow = 'hidden';
+}
+function closeRecycle(){
+  recycleView.classList.remove('in');
+  recycleView.classList.add('out');
+  setTimeout(() => { recycleView.classList.remove('out'); document.body.style.overflow = ''; }, 360);
+}
+
+document.getElementById('tsClose').addEventListener('click', closeRecycle);
+// 点击遮罩关闭（点 sheet 外部）
+recycleView.addEventListener('click', (e) => { if (e.target === recycleView) closeRecycle(); });
+
+// 完成（已选 N 件）→ 写入结算中心 chip 并关闭
+document.getElementById('tsFinish').addEventListener('click', () => {
+  const vis = visibleRecycles();
+  const total = vis.reduce((s, x) => s + computeEst(x.r), 0);
+  const tag = document.getElementById('ckRecycleTag');
+  tag.textContent = vis.length
+    ? ('已选 ' + vis.length + ' 件 · 旧机抵扣 ¥' + fmt(total))
+    : '以旧换新';
+  closeRecycle();
+  showToast(vis.length ? ('已选 ' + vis.length + ' 件旧品参与以旧换新') : '未选择旧品');
+});
+
+/* ============ 机况评估页（与同步下单流程一致：行内选项展开） ============ */
+const assessView = document.getElementById('assessView');
+const assessBody = document.getElementById('assessBody');
+let assessId = null;
+let tradeinOwnerId = null; // 以旧换新全页：正在操作的新品所属旧品 id（editTradein / assessQuote 时写入）
+
+function openAssess(id){
+  assessId = id;
+  renderAssess(id);
+  assessView.classList.add('in');
+  document.body.style.overflow = 'hidden';
+}
+function closeAssess(){
+  assessView.classList.remove('in');
+  assessView.classList.add('out');
+  setTimeout(() => { assessView.classList.remove('out'); document.body.style.overflow = ''; }, 360);
+}
+
+function renderAssess(id){
+  const r = findOld(id);
+  assessBody.innerHTML = `
+    <div class="cond-progress">
+      <div class="cond-progress-bar"><div class="cond-progress-fill" id="condProgressFill"></div></div>
+      <div class="cond-progress-count" id="condProgressCount">0/${COND_ORDER.length}</div>
+    </div>
+    <div class="cond-tip">
+      <span class="cond-tip-tag">小贴士</span>
+      <span class="cond-tip-text">请按实际情况填写，信息越准确回收价越精准</span>
+    </div>
+    <div class="cond-device">
+      <span>${r.name}</span>
+      <span class="cond-device-est" id="condDeviceEst">当前预估 ¥${fmt(computeEst(r))}</span>
+    </div>
+    <div class="cond-rows" id="condRows">
+      ${ASSESS_ITEMS.map((it, i) => `
+        <div class="cond-row" data-key="${it.key}" ${i === 0 ? '' : 'hidden'}>
+          <div class="cond-row-l">${it.label}</div>
+          <div class="cond-row-r"><span class="cond-row-val"></span><span class="cond-row-edit">✎</span></div>
+        </div>`).join('')}
+    </div>
+    <div class="cond-picker" id="condPicker"></div>
+    <div style="height:24px;"></div>`;
+
+  // 已评估过的项：回填并显示
+  ASSESS_ITEMS.forEach(it => {
+    const idx = r.sel[it.key];
+    const row = assessBody.querySelector('.cond-row[data-key="' + it.key + '"]');
+    if (idx >= 0) {
+      row.querySelector('.cond-row-val').textContent = it.options[idx].t;
+      row.classList.add('filled');
+      row.hidden = false;
+    }
+  });
+  updateAssessProgress();
+
+  // 默认展开第一个未评估的题
+  const firstUn = COND_ORDER.find(k => r.sel[k] < 0) || COND_ORDER[0];
+  renderAssessPicker(firstUn);
+}
+
+function updateAssessProgress(){
+  const r = findOld(assessId);
+  const filled = COND_ORDER.filter(k => r.sel[k] >= 0).length;
+  const total = COND_ORDER.length;
+  assessBody.querySelector('#condProgressFill').style.width = ((filled / total) * 100).toFixed(1) + '%';
+  const c = assessBody.querySelector('#condProgressCount');
+  c.textContent = filled + '/' + total;
+  c.classList.toggle('on', filled > 0);
+}
+
+function updateAssessEst(){
+  const r = findOld(assessId);
+  const el = assessBody.querySelector('#condDeviceEst');
+  if (el) el.textContent = '当前预估 ¥' + fmt(computeEst(r));
+}
+
+function renderAssessPicker(key){
+  const r = findOld(assessId);
+  const it = ASSESS_ITEMS.find(x => x.key === key);
+  assessBody.querySelectorAll('.cond-row').forEach(rr => rr.classList.remove('open'));
+  const row = assessBody.querySelector('.cond-row[data-key="' + key + '"]');
+  row.classList.add('open');
+  row.hidden = false;
+
+  const picker = assessBody.querySelector('#condPicker');
+  picker.innerHTML = it.options.map((o, i) => {
+    const on = r.sel[key] === i;
+    return `<div class="cond-option ${on ? 'on' : ''}" data-i="${i}">${o.t}</div>`;
+  }).join('');
+
+  picker.querySelectorAll('.cond-option').forEach(card => {
+    card.addEventListener('click', () => {
+      const i = parseInt(card.dataset.i, 10);
+      r.sel[key] = i;
+      row.querySelector('.cond-row-val').textContent = it.options[i].t;
+      row.classList.add('filled');
+      row.classList.remove('open');
+      picker.innerHTML = '';
+      updateAssessProgress();
+      updateAssessEst();
+      const next = COND_ORDER.find(k => r.sel[k] < 0);
+      if (next) renderAssessPicker(next);
+    });
+  });
+  setTimeout(() => picker.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+}
+
+// 行点击：已显示的行可重新展开（修改）
+assessBody.addEventListener('click', (e) => {
+  const row = e.target.closest('.cond-row');
+  if (!row || row.hidden) return;
+  renderAssessPicker(row.dataset.key);
+});
+
+document.getElementById('assessBack').addEventListener('click', closeAssess);
+// 获取估价 → 关闭评估页 + 关闭底层 sheet（如还有）→ 进入以旧换新 全页面
+document.getElementById('assessQuote').addEventListener('click', () => {
+  tradeinOwnerId = assessId; // 评估→全页，全页新品信息对齐被评估的旧品所属新品
+  renderTradein();
+  // 若底下还铺着以旧换新 sheet，先收掉，避免出现"sheet → tradein"两层叠态
+  const recycleView = document.getElementById('recycleView');
+  if (recycleView && recycleView.classList.contains('in')) closeRecycle();
+  // 先关闭评估页（保留被评估旧品的选中状态）
+  closeAssess();
+  // 短暂延迟后打开新页面，避免两个视图同时可见导致闪烁
+  setTimeout(openTradein, 220);
+});
+
+/* ========== 以旧换新 全页面：打开 / 关闭 / 渲染 ========== */
+const tradeinView = document.getElementById('tradeinView');
+
+// 从以旧换新页进入机况评估：关闭 tradein 全页 → 回到弹出浮窗（用户在浮窗里点修改旧品即可）
+function editConditionFromTradein(){
+  closeTradein();
+  // 进入机况评估页（取第一个参与中的旧品）
+  const first = visibleRecycles()[0];
+  if (first) setTimeout(() => openAssess(first.r.id), 220);
+}
+
+function fmtPrice(n){
+  // 千分位整数
+  return Number(n).toLocaleString('zh-CN', { maximumFractionDigits: 2 });
+}
+
+function renderTradein(){
+  // 主体新品：优先取「修改/评估」所在旧品所属的新品；否则取首个勾选新品
+  let owner = null;
+  const ctxId = (typeof tradeinOwnerId !== 'undefined' && tradeinOwnerId) || assessId;
+  if (ctxId) owner = PRODUCTS.find(p => (p.olds || []).some(o => o.id === ctxId));
+  const firstChecked = owner || PRODUCTS.find(p => p.checked) || PRODUCTS[0];
+
+  // 汇总当前已选旧品的回收总价
+  const subs = visibleRecycles().map(({r}) => ({ r, est: computeEst(r) }));
+  const oldSum = subs.reduce((s, x) => s + x.est, 0);
+  const subsidy = SUBSIDY; // 换新补贴
+  const refundOld = oldSum; // 回收后返给用户的"旧机抵扣金额"
+  const refundTotal = oldSum + subsidy; // 回收再反 = 旧机抵扣 + 换新补贴
+
+  // 新品价格：使用购物车首个勾选商品作为换新主体；若无则取 PRODUCTS[0]
+  // 优惠：260（优惠券）+ 100（教育认证）从结算页扣
+  const coupon = 260;
+  const edu = 300;
+
+  // 本次支付预估 = 单品购买 - 优惠券 - 教育认证
+  // （旧机抵扣按"回收后返"形式返还，不直接冲抵本次支付）
+  const final = firstChecked.price - coupon - edu;
+
+  // 写入文本（新品信息对齐结算页：model / spec / price / qty）
+  document.getElementById('tiNewName').textContent = firstChecked.model + ' ×' + firstChecked.qty;
+  document.getElementById('tiNewPrice').textContent = fmtPrice(firstChecked.price - 4000); // 预估国补后展示为减后价
+  document.getElementById('tiNewThumb').textContent = firstChecked.model.split(' ')[0] || '新品';
+  document.getElementById('tiSingle').textContent = fmtPrice(firstChecked.price); // 价格明细：单品购买
+
+  // 旧品信息：把所有参与中的旧品名 + 规格拼在一起
+  if (subs.length){
+    document.getElementById('tiOldName').textContent =
+      subs.map(s => s.r.name).join(' · ');
+    const specs = subs.map(s => s.r.spec).join(' / ');
+    document.getElementById('tiOldSpec').textContent = `${specs} · 共 ${subs.length} 件`;
+    document.getElementById('tiOldPrice').textContent = fmtPrice(oldSum);
+  } else {
+    document.getElementById('tiOldName').textContent = '暂无旧品';
+    document.getElementById('tiOldSpec').textContent = '请先在购物车勾选参与以旧换新的商品';
+    document.getElementById('tiOldPrice').textContent = '0';
+  }
+
+  // 价格明细（保持原静态"单品购买 ¥12,999"等价，仅旧品抵扣与回流金额动态）
+  document.getElementById('tiOldDed').textContent = fmtPrice(oldSum);
+  document.getElementById('tiFinal').textContent = fmtPrice(final);
+  document.getElementById('tiRefund').textContent = fmtPrice(refundTotal);
+  document.getElementById('tiRefundOld').textContent = fmtPrice(refundOld);
+}
+
+function openTradein(){
+  tradeinView.classList.remove('out');
+  tradeinView.classList.add('in');
+  document.body.style.overflow = 'hidden';
+}
+function closeTradein(){
+  tradeinView.classList.remove('in');
+  tradeinView.classList.add('out');
+  setTimeout(() => { tradeinView.classList.remove('out'); document.body.style.overflow = ''; }, 360);
+}
+
+document.getElementById('tiBack').addEventListener('click', () => {
+  closeTradein();
+  showToast('已返回以旧换新选择');
+});
+document.getElementById('tiClose').addEventListener('click', () => {
+  closeTradein();
+  showToast('已退出以旧换新');
+});
+document.getElementById('tiBtnSubmit').addEventListener('click', () => {
+  // 立即换新：关闭全页面 → 回到结算页 → 自动弹出以旧换新浮窗
+  closeTradein();
+  setTimeout(() => {
+    openRecycle();
+    showToast('换新订单已提交，请确认以旧换新商品');
+  }, 220);
+});
+document.getElementById('tiPayRow').addEventListener('click', () => showToast('请填写支付宝账号'));
+// 三 tab 切换（上门 / 邮寄）
+document.getElementById('tiTabs').addEventListener('click', (e) => {
+  const tab = e.target.closest('.tab');
+  if (!tab) return;
+  document.querySelectorAll('#tiTabs .tab').forEach(t => t.classList.remove('on'));
+  tab.classList.add('on');
+  showToast(tab.dataset.tab === 'mail' ? '已切换为邮寄回收' : '已切换为上门回收');
+});
+
+/* 交互：地址 / 支付 / 发票 / 优惠券 / 乐豆toggle */
+document.getElementById('ckAddr').addEventListener('click', () => showToast('选择收货地址'));
+document.getElementById('ckPayMethod').addEventListener('click', () => showToast('支付方式'));
+document.getElementById('ckInvoice').addEventListener('click', () => showToast('选择发票'));
+document.getElementById('ckCoupon').addEventListener('click', () => showToast('优惠券：已选 -¥100'));
+document.getElementById('ckRecycle').addEventListener('click', openRecycle);
+document.getElementById('leboSwitch').addEventListener('click', (e) => {
+  e.currentTarget.classList.toggle('on');
+  showToast(e.currentTarget.classList.contains('on') ? '已开启乐豆抵扣' : '已关闭乐豆抵扣');
+});
+
+/* ============ 提交订单 ============ */
+document.getElementById('ckSubmitBtn').addEventListener('click', () => {
+  const count = PRODUCTS.filter(p=>p.checked).reduce((s,p) => s + p.qty, 0);
+  showToast('订单已提交 · 共 ' + count + ' 件，等待支付');
+  try {
+    const sel = PRODUCTS.filter(p => p.checked);
+    const products = sel.map(p => ({name: p.model, spec: p.spec, price: p.price, qty: p.qty}));
+    const recs = visibleRecycles();
+    const olds = recs.map(x => ({name: x.r.name, est: computeEst(x.r), subsidy: SUBSIDY}));
+    const goods = sel.reduce((s,p) => s + p.price * p.qty, 0);
+    const pay = parseFloat((document.getElementById('ckPay').textContent||'').replace(/[^\d.]/g,'')) || 0;
+    const discount = Math.max(0, goods - pay);
+    localStorage.setItem('tradein_order', JSON.stringify({flow:'cart', products, olds, money:{goods, freight:0, discount, pay}}));
+  } catch(e){ console.warn('order sync failed', e); }
+  setTimeout(() => { window.location.href = '以旧换新订单详情-WAP.html'; }, 700);
+});
+
+/* ============ Toast ============ */
+const toast = document.getElementById('toast');
+let toastTimer;
+function showToast(msg){
+  toast.textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 1800);
+}
+
+/* 初始化 */
+renderCart();
+updateRecycleChip();
+</script>
+</body>
+</html>

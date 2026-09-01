@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>以旧换新流程原型</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #f5f5f5;
+    color: #1a1a1a;
+    min-height: 100vh;
+    padding: 48px 20px;
+  }
+  .wrap { max-width: 900px; margin: 0 auto; }
+  h1 {
+    font-size: 26px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #1a1a1a;
+  }
+  .sub {
+    font-size: 14px;
+    color: #8c8c8c;
+    margin-bottom: 32px;
+  }
+  .list { display: flex; flex-direction: column; gap: 16px; }
+  a.card {
+    display: block;
+    text-decoration: none;
+    background: #fff;
+    border: 1px solid #e8e8e8;
+    border-radius: 10px;
+    padding: 22px 24px;
+    transition: all .18s ease;
+    border-left: 4px solid #E60012;
+  }
+  a.card:hover {
+    border-color: #E60012;
+    box-shadow: 0 4px 16px rgba(230,0,18,.10);
+    transform: translateY(-1px);
+  }
+  .card .title {
+    font-size: 17px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 6px;
+  }
+  .card .desc {
+    font-size: 13px;
+    color: #8c8c8c;
+    line-height: 1.6;
+  }
+  .card .arrow {
+    color: #E60012;
+    font-size: 13px;
+    margin-top: 10px;
+    display: inline-block;
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>以旧换新流程原型</h1>
+    <div class="sub">共 3 个流程原型，点击直接打开</div>
+    <div class="list">
+      <a class="card" href="./购物车多商品下单流程.html">
+        <div class="title">购物车多商品下单流程</div>
+        <div class="desc">购物车中每个商品均提供以旧换新入口，点击后进入对应以旧换新页面</div>
+        <div class="arrow">打开 →</div>
+      </a>
+      <a class="card" href="./同步下单流程.html">
+        <div class="title">同步下单流程</div>
+        <div class="desc">新机购买与旧机回收同步下单，定价公式多项目联动（单品、优惠券、国补、教育认证、旧机抵扣、换新补贴）</div>
+        <div class="arrow">打开 →</div>
+      </a>
+      <a class="card" href="./绑定回收单流程.html">
+        <div class="title">绑定回收单流程</div>
+        <div class="desc">已下单后补绑旧机回收单，弹窗/浮层交互，贯穿订单页与结算页</div>
+        <div class="arrow">打开 →</div>
+      </a>
+    </div>
+  </div>
+</body>
+</html>

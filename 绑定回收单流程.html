@@ -1,0 +1,3081 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>ThinkBook 16p 2026 - 商品详情 · H5 原型</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { width: 100%; min-height: 100%; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", "Microsoft YaHei", sans-serif;
+  font-size: 14px;
+  color: #1a1a1a;
+  background: #ebebeb;
+  max-width: 750px;
+  margin: 0 auto;
+  position: relative;
+  padding-bottom: 80px;
+}
+
+/* —— 状态栏占位 —— */
+.status-bar {
+  height: 20px;
+  background: transparent;
+}
+
+/* —— 顶部 nav (透明覆盖在 hero 上) —— */
+.top-nav {
+  position: absolute;
+  top: 20px; left: 0; right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  z-index: 10;
+}
+.top-nav .nav-icon {
+  width: 30px; height: 30px;
+  background: rgba(0,0,0,0.45);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff;
+  font-size: 16px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.top-nav .nav-right { display: flex; gap: 8px; }
+
+/* —— 主商品图 —— */
+.hero {
+  position: relative;
+  background: linear-gradient(160deg, #eef2f6 0%, #f8fafc 60%, #e2e8f0 100%);
+  width: 100%;
+  height: 360px;
+  overflow: hidden;
+}
+.hero-art {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hero-art svg { width: 78%; max-width: 320px; }
+.hero-brand {
+  position: absolute;
+  top: 14px; left: 14px;
+  background: #e1251b;
+  color: #fff;
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: 2px;
+  letter-spacing: 0.5px;
+}
+.hero-tag {
+  position: absolute;
+  top: 14px; right: 14px;
+  background: linear-gradient(90deg, #ff5252, #e1251b);
+  color: #fff;
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+.hero-dots {
+  position: absolute;
+  bottom: 12px; left: 50%;
+  transform: translateX(-50%);
+  display: flex; gap: 4px;
+  align-items: center;
+}
+.hero-dots span {
+  width: 5px; height: 5px;
+  background: rgba(0,0,0,0.2);
+  border-radius: 50%;
+}
+.hero-dots span.on {
+  width: 18px; background: #e1251b;
+  border-radius: 3px;
+}
+
+/* —— 价格块 —— */
+.price-card {
+  background: #fff;
+  padding: 12px 12px 14px;
+  position: relative;
+}
+.price-card::before {
+  content: '';
+  position: absolute;
+  top: -8px; left: 0; right: 0;
+  height: 8px;
+  background: linear-gradient(180deg, transparent, rgba(225,37,27,0.04));
+}
+.price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+.price-sym { font-size: 16px; color: #e1251b; font-weight: 600; }
+.price-num { font-size: 30px; color: #e1251b; font-weight: 700; line-height: 1; font-family: -apple-system, sans-serif; }
+.price-orig {
+  font-size: 12px;
+  color: #999;
+  text-decoration: line-through;
+  margin-left: 6px;
+}
+.price-info {
+  margin-left: auto;
+  font-size: 11px;
+  color: #999;
+  text-align: right;
+}
+.price-info strong { color: #e1251b; font-size: 13px; }
+
+.tradein-strip {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(90deg, #fff7f3 0%, #fff 100%);
+  border: 1px dashed #ffb6a3;
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+.tradein-strip-l { display: flex; align-items: baseline; gap: 4px; }
+.tradein-strip-l .lbl { font-size: 11px; color: #999; }
+.tradein-strip-l .p { font-size: 13px; color: #e1251b; font-weight: 700; }
+.tradein-strip-l .p .sym { font-size: 11px; font-weight: 600; }
+.tradein-strip-r { font-size: 11px; color: #e1251b; }
+.tradein-strip-r b { font-weight: 600; }
+
+.sub-tag {
+  display: inline-flex;
+  gap: 4px;
+  font-size: 10px;
+  background: #fff0eb;
+  color: #e1251b;
+  border: 0.5px solid #ffc8b8;
+  padding: 1px 5px;
+  border-radius: 2px;
+  margin-bottom: 6px;
+  align-items: center;
+}
+
+/* —— 标题与卖点 —— */
+.title-block {
+  background: #fff;
+  padding: 0 12px 12px;
+}
+.title {
+  font-size: 16px;
+  line-height: 1.4;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 6px;
+}
+.tags { display: flex; gap: 5px; flex-wrap: wrap; }
+.tags span {
+  font-size: 10px;
+  color: #e1251b;
+  border: 0.5px solid #ffb6a3;
+  padding: 1px 6px;
+  border-radius: 2px;
+}
+.tags .blue {
+  color: #1e88e5;
+  border-color: #b6dcff;
+}
+
+/* —— 选项卡选择区 (官方标配) —— */
+.spec {
+  background: #fff;
+  margin-top: 8px;
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+}
+.spec .lbl { color: #999; }
+.spec .val { color: #333; flex: 1; margin-left: 8px; }
+.spec .arrow { color: #ccc; font-size: 16px; }
+
+/* —— 通用分组 —— */
+.group {
+  background: #fff;
+  margin-top: 8px;
+  padding: 12px;
+}
+.group .line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: #666;
+  padding: 8px 0;
+}
+.group .line:first-child { padding-top: 0; }
+.group .line + .line { border-top: 0.5px solid #f5f5f5; }
+.group .line .v { color: #333; }
+.group .line .arrow { color: #ccc; font-size: 16px; }
+
+.coupon-row {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+.coupon {
+  font-size: 10px;
+  color: #e1251b;
+  border: 1px solid #ffb6a3;
+  padding: 3px 6px;
+  border-radius: 2px;
+  background: #fff7f3;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+/* —— 核心：以旧换新入口 —— */
+.tradein-entry {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(95deg, #fff5f3 0%, #fffaf8 100%);
+  border: 1px solid #ffd1c4;
+  border-radius: 10px;
+  padding: 12px;
+  margin-top: 10px;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.tradein-entry:active {
+  transform: scale(0.98);
+  box-shadow: 0 2px 8px rgba(225,37,27,0.08);
+}
+.tradein-icon {
+  width: 40px; height: 40px;
+  background: linear-gradient(135deg, #ff5757 0%, #e1251b 100%);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff;
+  font-size: 20px;
+  flex-shrink: 0;
+  box-shadow: 0 4px 10px rgba(225,37,27,0.25);
+}
+.tradein-info { flex: 1; min-width: 0; }
+.tradein-title-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 4px;
+}
+.new-badge {
+  font-size: 10px;
+  color: #fff;
+  background: linear-gradient(90deg, #ff7800, #ffae00);
+  padding: 1px 6px;
+  border-radius: 8px 2px 8px 2px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+.tradein-sub {
+  display: flex;
+  gap: 8px;
+  font-size: 11px;
+  color: #999;
+}
+.tradein-sub b { color: #e1251b; font-weight: 500; }
+.tradein-sub .dot::before {
+  content: '·';
+  margin-right: 4px;
+  color: #e1251b;
+}
+.tradein-arrow {
+  color: #ccc;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+/* —— 评论 —— */
+.review-card {
+  background: #fff;
+  margin-top: 8px;
+  padding: 12px;
+}
+.review-hd {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.review-title { font-size: 14px; font-weight: 600; color: #1a1a1a; }
+.review-title span { font-weight: normal; color: #999; font-size: 11px; margin-left: 4px; }
+.review-more { font-size: 12px; color: #666; }
+
+.review-tags { display: flex; gap: 6px; margin-bottom: 10px; overflow-x: auto; padding-bottom: 2px;}
+.review-tags::-webkit-scrollbar { display: none; }
+.review-tag {
+  font-size: 11px;
+  color: #666;
+  border: 0.5px solid #e0e0e0;
+  padding: 3px 8px;
+  border-radius: 12px;
+  white-space: nowrap;
+}
+.review-tag em {
+  color: #e1251b;
+  font-style: normal;
+  margin-left: 2px;
+}
+.review-item {
+  padding: 8px 0 4px;
+  border-top: 0.5px solid #f5f5f5;
+}
+.review-user {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #666;
+}
+.review-avatar {
+  width: 22px; height: 22px;
+  background: linear-gradient(135deg, #ffd1c4, #ffae8a);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px;
+  color: #fff;
+  font-weight: 600;
+}
+.review-stars { color: #e1251b; letter-spacing: -1px; }
+.review-text {
+  font-size: 13px;
+  color: #333;
+  line-height: 1.5;
+  margin: 6px 0;
+}
+
+/* —— 看了又看 —— */
+.also-card {
+  background: #fff;
+  margin-top: 8px;
+  padding: 12px;
+}
+.also-title { font-size: 14px; font-weight: 600; margin-bottom: 10px; }
+.also-row {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+.also-row::-webkit-scrollbar { display: none; }
+.also-item {
+  flex: 0 0 100px;
+  text-align: center;
+}
+.also-img {
+  width: 100px; height: 100px;
+  background: linear-gradient(135deg, #eef2f6, #f5f7fa);
+  border-radius: 6px;
+  margin-bottom: 4px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; color: #b0b0b0;
+}
+.also-name {
+  font-size: 11px;
+  color: #333;
+  line-height: 1.3;
+  height: 28px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.also-price {
+  font-size: 12px;
+  color: #e1251b;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+/* —— 底部操作栏 —— */
+.action-bar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  max-width: 750px;
+  margin: 0 auto;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  height: 56px;
+  border-top: 0.5px solid #f0f0f0;
+  padding-bottom: env(safe-area-inset-bottom);
+  z-index: 50;
+}
+.action-bar .left-group {
+  display: flex;
+  align-items: center;
+  padding-left: 4px;
+}
+.action-icon {
+  width: 50px; height: 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: #666;
+  gap: 2px;
+  position: relative;
+}
+.action-icon .ic { font-size: 18px; line-height: 1; }
+.action-icon .badge {
+  position: absolute;
+  top: 6px; right: 10px;
+  background: #e1251b;
+  color: #fff;
+  font-size: 9px;
+  padding: 1px 4px;
+  border-radius: 8px;
+  min-width: 16px;
+  text-align: center;
+  font-weight: 600;
+}
+.btn-buy {
+  flex: 1;
+  height: 40px;
+  background: linear-gradient(90deg, #ffae00, #ff7800);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  margin: 8px 4px 8px 6px;
+  border-radius: 22px 0 0 22px;
+  border: none;
+}
+.btn-cart {
+  flex: 1;
+  height: 40px;
+  background: linear-gradient(90deg, #ff5252, #e1251b);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  margin: 8px 8px 8px 0;
+  border-radius: 0 22px 22px 0;
+  border: none;
+}
+
+/* —— 浮层遮罩 —— */
+.mask {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.32s ease;
+  z-index: 200;
+}
+.mask.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* —— 浮层 (JD 风) —— */
+.sheet {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  max-width: 750px;
+  margin: 0 auto;
+  background: #f5f5f7;
+  border-radius: 16px 16px 0 0;
+  transform: translateY(100%);
+  transition: transform 0.36s cubic-bezier(0.32, 0.72, 0, 1);
+  z-index: 201;
+  display: flex;
+  flex-direction: column;
+  max-height: 88vh;
+  overflow: hidden;
+}
+.sheet.show {
+  transform: translateY(0);
+}
+.sheet-head {
+  position: relative;
+  background: linear-gradient(180deg, #fff5f3 0%, #fff 100%);
+  padding: 12px 16px 18px;
+  border-radius: 16px 16px 0 0;
+  flex-shrink: 0;
+}
+.sheet-handle {
+  width: 36px; height: 4px;
+  background: #ddd;
+  border-radius: 2px;
+  margin: 0 auto 10px;
+}
+.sheet-head-title {
+  font-size: 17px;
+  font-weight: 600;
+  text-align: center;
+  color: #1a1a1a;
+}
+.sheet-close {
+  position: absolute;
+  top: 14px; right: 14px;
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.05);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  color: #666;
+  cursor: pointer;
+}
+.sheet-sub-title {
+  text-align: center;
+  font-size: 12px;
+  color: #999;
+  margin-top: 4px;
+}
+
+.sheet-body {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 10px 12px 0;
+}
+.sheet-body::-webkit-scrollbar { display: none; }
+
+.sheet-tip {
+  background: linear-gradient(90deg, #fff7f3 0%, #fff 100%);
+  border: 1px solid #ffd1c4;
+  border-radius: 10px;
+  padding: 9px 12px;
+  font-size: 12px;
+  color: #666;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.sheet-tip-icon {
+  width: 22px; height: 22px;
+  background: #fff;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: #e1251b;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+/* —— 步骤卡 —— */
+.step {
+  background: #fff;
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 10px;
+}
+.step-hd {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.step-hd-l {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+.step-num {
+  width: 18px; height: 18px;
+  background: #e1251b;
+  color: #fff;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+}
+.step-chosen {
+  font-size: 11px;
+  color: #999;
+  max-width: 50%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.step-chosen.on { color: #e1251b; }
+
+/* 品类标签 */
+.cat-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.cat-tab {
+  flex: 1;
+  text-align: center;
+  padding: 10px 6px;
+  background: #f5f5f7;
+  border-radius: 10px;
+  font-size: 12px;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.18s;
+  border: 1px solid transparent;
+}
+.cat-tab .ic { display: block; font-size: 18px; margin-bottom: 2px; }
+.cat-tab.on {
+  background: #fff5f3;
+  color: #e1251b;
+  font-weight: 600;
+  border-color: #ffc8b8;
+}
+
+/* 品牌 */
+.brand-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.brand-item {
+  text-align: center;
+  padding: 9px 4px 7px;
+  background: #f7f7f9;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 12px;
+  color: #333;
+  transition: all 0.18s;
+  border: 1px solid transparent;
+}
+.brand-item.on {
+  background: #fff5f3;
+  color: #e1251b;
+  font-weight: 600;
+  border-color: #e1251b;
+}
+.brand-icon {
+  width: 28px; height: 28px;
+  margin: 0 auto 4px;
+  background: #fff;
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: #666;
+}
+.brand-item.on .brand-icon { color: #e1251b; background: #fff; }
+
+/* 型号 */
+.model-list { display: flex; flex-direction: column; gap: 6px; }
+.model-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  background: #f7f7f9;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.18s;
+}
+.model-item.on {
+  background: #fff5f3;
+  border-color: #e1251b;
+}
+.model-item.on .model-name { color: #e1251b; font-weight: 600; }
+
+/* 配置 pills */
+.opt-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+.opt-pill {
+  text-align: center;
+  padding: 8px 6px;
+  background: #f7f7f9;
+  border-radius: 8px;
+  font-size: 12px;
+  color: #666;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.18s;
+}
+.opt-pill.on {
+  background: #fff5f3;
+  border-color: #e1251b;
+  color: #e1251b;
+  font-weight: 600;
+}
+
+/* 成色 */
+.cond-list { display: flex; flex-direction: column; gap: 6px; }
+.cond-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: #f7f7f9;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.18s;
+}
+.cond-item.on {
+  background: #fff5f3;
+  border-color: #e1251b;
+}
+.cond-radio {
+  width: 16px; height: 16px;
+  border: 1.5px solid #d0d0d0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.18s;
+}
+.cond-item.on .cond-radio { border-color: #e1251b; }
+.cond-item.on .cond-radio::after {
+  content: '';
+  width: 8px; height: 8px;
+  background: #e1251b;
+  border-radius: 50%;
+}
+.cond-name { flex: 1; color: #333; }
+.cond-item.on .cond-name { color: #e1251b; font-weight: 600; }
+
+/* 底部提交 */
+.sheet-foot {
+  background: #fff;
+  padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+  border-top: 0.5px solid #f0f0f0;
+  flex-shrink: 0;
+}
+.sheet-submit {
+  width: 100%;
+  height: 46px;
+  background: linear-gradient(90deg, #ff5252 0%, #e1251b 100%);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  border-radius: 23px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  box-shadow: 0 4px 14px rgba(225,37,27,0.25);
+  transition: transform 0.1s, box-shadow 0.2s;
+}
+.sheet-submit:active { transform: scale(0.99); }
+.sheet-submit .em { font-size: 12px; color: #ffd1c4; text-decoration: line-through; margin-left: 4px;}
+
+/* 隐藏辅助类 */
+.empty-fields {
+  font-size: 12px;
+  color: #bbb;
+  text-align: center;
+  padding: 14px 0;
+}
+
+/* 浮层 step-bar 进度条 (顶部进度) */
+.progress-strip {
+  background: #fff;
+  padding: 6px 12px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #999;
+  border-bottom: 0.5px solid #f0f0f0;
+}
+.progress-bar {
+  flex: 1;
+  margin: 0 10px;
+  height: 4px;
+  background: #f5f5f7;
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+.progress-bar::after {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 60%;
+  background: linear-gradient(90deg, #ff7800, #e1251b);
+  border-radius: 2px;
+  transition: width 0.3s;
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0,0,0,0.82);
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 13px;
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+  max-width: 80%;
+  text-align: center;
+}
+.toast.show { opacity: 1; }
+
+/* —— 浮层按钮状态 —— */
+.sheet-submit.disabled,
+.sheet-submit:disabled {
+  background: #e0e0e0;
+  color: #999;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+.sheet-submit.disabled:active,
+.sheet-submit:disabled:active { transform: none; }
+
+/* —— 视图切换 —— */
+.view {
+  display: block;
+}
+.view.hide {
+  display: none;
+}
+
+/* —— 下单页面 —— */
+.order-view {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  transform: translateY(100%);
+  transition: transform 0.36s cubic-bezier(0.32, 0.72, 0, 1);
+}
+.order-view.in {
+  transform: translateY(0);
+}
+.order-view.out {
+  transform: translateY(100%);
+}
+
+/* 可滚动内容区（留出底部固定栏高度） */
+.order-scroll {
+  position: absolute;
+  top: 0;
+  bottom: calc(60px + env(safe-area-inset-bottom));
+  left: 0; right: 0;
+  max-width: 750px;
+  margin: 0 auto;
+  background: #f5f5f7;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  z-index: 1;
+}
+
+/* 顶部 nav */
+.order-nav {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 12px;
+  background: #fff;
+  border-bottom: 0.5px solid #f0f0f0;
+}
+.order-nav .back,
+.order-nav .close-btn {
+  width: 30px; height: 30px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  color: #1a1a1a;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background 0.15s;
+}
+.order-nav .back:active,
+.order-nav .close-btn:active { background: #f5f5f7; }
+.order-nav .title { font-size: 16px; font-weight: 600; color: #1a1a1a; }
+.order-nav .spacer { width: 30px; }
+
+/* 步骤进度 */
+.steps-bar {
+  background: #fff;
+  padding: 14px 16px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+.step-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #999;
+}
+.step-item .dot {
+  width: 18px; height: 18px;
+  border: 1.5px solid #d0d0d0;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: #999;
+}
+.step-item.done .dot {
+  background: #e1251b;
+  border-color: #e1251b;
+  color: #fff;
+}
+.step-item.done { color: #e1251b; font-weight: 600; }
+.step-item.active .dot {
+  border-color: #e1251b;
+  color: #e1251b;
+}
+.step-item.active { color: #e1251b; font-weight: 600; }
+.step-divider {
+  width: 22px;
+  height: 1.5px;
+  background: #d0d0d0;
+  position: relative;
+}
+.step-divider::before {
+  content: '';
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  width: 5px; height: 5px;
+  background: #d0d0d0;
+  border-radius: 50%;
+}
+
+/* 卡片 */
+.order-card {
+  background: #fff;
+  margin: 8px 12px 0;
+  border-radius: 12px;
+  padding: 14px;
+}
+.order-card.gray {
+  background: #fafafb;
+  border: 1px solid #f0f0f0;
+}
+.card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.card-head .title { font-size: 14px; font-weight: 600; color: #1a1a1a; }
+.card-head .tag {
+  font-size: 10px;
+  background: #ffeded;
+  color: #e1251b;
+  padding: 2px 6px;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+/* 新品卡 */
+.new-product {
+  display: flex;
+  gap: 10px;
+}
+.new-product .thumb {
+  width: 72px; height: 72px;
+  background: linear-gradient(135deg, #fde4c0, #f5c890);
+  border-radius: 8px;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; color: #8a5018;
+  position: relative;
+}
+.new-product .info { flex: 1; min-width: 0; }
+.new-product .name {
+  font-size: 13px;
+  line-height: 1.4;
+  color: #1a1a1a;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  margin-bottom: 6px;
+}
+.new-product .price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  color: #e1251b;
+}
+.new-product .price-row .sym { font-size: 12px; }
+.new-product .price-row .num { font-size: 20px; font-weight: 700; }
+.new-product .price-row .hint {
+  font-size: 10px;
+  background: linear-gradient(90deg, #ff5757, #e1251b);
+  color: #fff;
+  padding: 1px 6px;
+  border-radius: 8px;
+  margin-left: 4px;
+  font-weight: 600;
+}
+
+/* 价格计算 */
+.price-math {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 0.5px dashed #eee;
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  font-size: 12px;
+  color: #666;
+}
+/* 可横滑的前置公式 */
+.pm-scroll {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-right: 2px;
+}
+.pm-scroll::-webkit-scrollbar { display: none; }
+.price-math .cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 8px 0;
+}
+.pm-scroll .cell { flex: 0 0 auto; min-width: 82px; }
+/* 固定的减号与旧品框 */
+.price-math .pm-op-fixed { flex-shrink: 0; }
+.price-math .cell.highlight-old {
+  flex: 0 0 auto;
+  width: 116px;
+  background: linear-gradient(135deg, #fff5f3, #ffece8);
+  border: 1px solid #ffb6a3;
+  border-radius: 8px;
+  margin: 4px -2px;
+  padding: 8px 6px;
+}
+.price-math .cell .v {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a1a1a;
+  line-height: 1.2;
+}
+.price-math .cell .v.small { font-size: 13px; font-weight: 600; }
+.price-math .cell .lbl {
+  font-size: 11px;
+  color: #999;
+  margin-top: 4px;
+  font-weight: 400;
+}
+.price-math .op {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: #c0c0c0;
+  width: 16px;
+  flex-shrink: 0;
+  align-self: center;
+}
+.price-math .op::before {
+  content: '';
+  display: block;
+  width: 10px;
+  height: 0;
+  border-top: 1.5px solid #c0c0c0;
+}
+.price-math .cell.red .v { color: #e1251b; }
+.price-math .cell.red .lbl { color: #e1251b; font-weight: 500; }
+/* 旧品抵扣+换新补贴 双值同框 */
+.price-math .cell-pair .pair-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  line-height: 1.5;
+}
+.price-math .cell-pair .pair-row + .pair-row {
+  border-top: 1px dashed #ffc9ba;
+  margin-top: 4px;
+  padding-top: 4px;
+}
+.price-math .cell-pair .pair-lbl {
+  font-size: 10px;
+  color: #e1251b;
+  white-space: nowrap;
+}
+.price-math .cell-pair .pair-val {
+  font-size: 13px;
+  color: #e1251b;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.price-math .cell-pair .pair-val.plus { font-size: 12px; }
+
+
+.payment-note {
+  margin-top: 10px;
+  padding: 8px 10px;
+  background: #fff7f3;
+  border-radius: 6px;
+  font-size: 11px;
+  color: #666;
+  line-height: 1.6;
+}
+.payment-note b { color: #e1251b; }
+
+/* 旧机卡 */
+.old-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fafafb;
+  border-radius: 10px;
+  padding: 12px;
+}
+.old-item .thumb {
+  width: 56px; height: 56px;
+  background: linear-gradient(135deg, #2a3a4a, #4a5a6a);
+  border-radius: 8px;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff;
+  font-size: 10px;
+}
+.old-item .info { flex: 1; }
+.old-item .name { font-size: 13px; color: #1a1a1a; margin-bottom: 4px; }
+.old-item .sub { font-size: 11px; color: #999; }
+.old-item .price-side { text-align: right; }
+.old-item .price-side .p { font-size: 16px; font-weight: 700; color: #e1251b; }
+.old-item .price-side .hint { font-size: 10px; color: #999; }
+
+/* 换新方式 */
+.pay-row {
+  display: flex; align-items: center; gap: 10px;
+  padding-bottom: 12px;
+  border-bottom: 1px dashed #ececec;
+  margin-bottom: 12px;
+}
+.pay-row .lbl { font-size: 13px; color: #1a1a1a; font-weight: 500; }
+.pay-chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 12px;
+  border: 1px solid #e1251b;
+  border-radius: 14px;
+  background: #fff5f3;
+  color: #1a1a1a;
+  font-size: 12px;
+  cursor: pointer;
+}
+.pay-chip .radio {
+  width: 12px; height: 12px;
+  border: 1px solid #e1251b;
+  border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.pay-chip.on .radio::after {
+  content: ''; width: 6px; height: 6px; background: #e1251b; border-radius: 50%;
+}
+
+/* 收款方式 → 收集支付宝账号 入口 */
+.pay-row .pay-link {
+  margin-left: auto;
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 13px; color: #1a1a1a; cursor: pointer;
+}
+.pay-row .pay-link .status { color: #999; font-size: 13px; }
+.pay-row .pay-link .status.filled { color: #1a1a1a; font-weight: 500; }
+.pay-row .pay-link .arrow { color: #c2c2c2; font-size: 16px; line-height: 1; margin-left: 2px; }
+
+/* —— 添加收款信息 浮窗（单层，表单/确认两个内部视图） —— */
+.alipay-mask {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 600;
+  animation: apFadeIn .2s;
+}
+.alipay-panel {
+  position: fixed; left: 0; right: 0; bottom: 0;
+  background: #fff;
+  z-index: 601;
+  border-radius: 16px 16px 0 0;
+  display: flex; flex-direction: column;
+  max-height: 92%;
+  overflow: hidden;
+  animation: apSlideUp .25s;
+}
+.ap-nav {
+  height: 48px; background: #fff;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+  border-bottom: 1px solid #f0f0f0;
+}
+.ap-nav .ap-close {
+  position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+  font-size: 22px; color: #1a1a1a; cursor: pointer; line-height: 1;
+}
+.ap-nav .ap-title { font-size: 16px; color: #1a1a1a; font-weight: 600; }
+.ap-view { display: flex; flex-direction: column; }
+.ap-body { padding: 16px; flex: 1; overflow-y: auto; }
+.ap-field { background: #f7f8fa; border-radius: 8px; padding: 14px 12px; margin-bottom: 12px; }
+.ap-input { width: 100%; border: none; outline: none; font-size: 14px; color: #1a1a1a; background: transparent; }
+.ap-input::placeholder { color: #b8b8b8; }
+.alipay-tip { text-align: right; padding: 2px 2px 4px; }
+.alipay-tip a { color: #e1251b; font-size: 12px; text-decoration: none; }
+.ap-confirm-title { text-align: center; font-size: 16px; font-weight: 600; color: #1a1a1a; margin-bottom: 14px; }
+.ap-line { font-size: 14px; color: #1a1a1a; font-weight: 600; margin-bottom: 6px; }
+.ap-tips { padding-left: 18px; margin-top: 10px; color: #666; font-size: 12px; line-height: 1.7; }
+.ap-foot { padding: 14px 16px 24px; background: #fff; }
+.ap-foot-2 { display: flex; gap: 12px; }
+.ap-submit { width: 100%; height: 46px; border-radius: 23px; border: none; background: #e1251b; color: #fff; font-size: 16px; font-weight: 600; cursor: pointer; }
+.ap-btn-cancel { flex: 1; height: 44px; border-radius: 22px; border: 1px solid #e5e7eb; background: #fff; color: #1a1a1a; font-size: 15px; cursor: pointer; }
+.ap-btn-ok { flex: 1; height: 44px; border-radius: 22px; border: none; background: #e1251b; color: #fff; font-size: 15px; font-weight: 600; cursor: pointer; }
+
+@keyframes apFadeIn { from { opacity: 0 } to { opacity: 1 } }
+@keyframes apSlideUp { from { transform: translateY(100%) } to { transform: translateY(0) } }
+
+/* 三 tab */
+.exchange-tabs {
+  display: flex;
+  border-bottom: 1px solid #f0f0f0;
+  margin-bottom: 14px;
+}
+.exchange-tabs .tab {
+  flex: 1;
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+  padding: 8px 0 10px;
+  cursor: pointer;
+  position: relative;
+  font-weight: 500;
+  transition: color .18s;
+}
+.exchange-tabs .tab.on {
+  color: #1a1a1a;
+  font-weight: 600;
+}
+.exchange-tabs .tab.on::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -1px;
+  transform: translateX(-50%);
+  width: 28px; height: 3px;
+  background: #e1251b;
+  border-radius: 2px;
+}
+
+/* 步骤时间线 */
+.ex-steps {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  padding: 6px 4px 14px;
+  position: relative;
+}
+.ex-steps .step {
+  flex: 0 0 auto;
+  display: flex; flex-direction: column; align-items: center;
+  width: 80px;
+  text-align: center;
+}
+.ex-steps .step .ic {
+  width: 36px; height: 36px;
+  background: #f5f5f7;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+}
+.ex-steps .step .ic svg { width: 22px; height: 22px; }
+.ex-steps .step .lbl { font-size: 11px; color: #1a1a1a; margin-top: 4px; }
+.ex-steps .dash {
+  flex: 1;
+  height: 1px;
+  border-top: 1px dashed #cfcfd4;
+  margin-top: 18px;
+}
+
+/* 表单 */
+.ex-form .form-row {
+  display: flex; align-items: center;
+  padding: 11px 0;
+  border-bottom: 1px solid #f0f0f0;
+  position: relative;
+}
+.ex-form .form-row .mark {
+  width: 14px; height: 14px;
+  flex-shrink: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  margin-right: 8px;
+  font-size: 14px;
+  line-height: 1;
+}
+.ex-form .form-row .mark.required {
+  color: #e1251b;
+  font-weight: 700;
+}
+.ex-form .form-row .mark.required::before { content: '◎'; font-size: 12px; }
+.ex-form .form-row .mark.optional::before {
+  content: '';
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #e1251b;
+  display: inline-block;
+}
+.ex-form .form-row .f-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 13px;
+  color: #1a1a1a;
+  background: transparent;
+  padding: 0;
+}
+.ex-form .form-row .f-input::placeholder { color: #b0b0b0; }
+.ex-form .form-row .f-static {
+  flex: 1;
+  font-size: 13px;
+  color: #1a1a1a;
+  line-height: 1.5;
+  word-break: break-all;
+}
+.ex-form .form-row .f-static.muted { color: #b0b0b0; }
+.ex-form .form-row .arrow {
+  color: #c8c8cc; font-size: 18px; margin-left: 6px; flex-shrink: 0;
+  font-family: -apple-system, sans-serif;
+}
+.ex-form .form-row.has-arrow { cursor: pointer; }
+.ex-form .form-row.has-arrow.addr .f-static {
+  font-size: 12px;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.ex-form .form-row.has-arrow .locate {
+  position: absolute;
+  right: 20px; top: 50%; transform: translateY(-50%);
+  font-size: 11px;
+  color: #e1251b;
+  display: inline-flex; align-items: center; gap: 2px;
+}
+.ex-form .form-row.has-arrow .locate::before {
+  content: '';
+  display: inline-block;
+  width: 10px; height: 10px;
+  border: 1.5px solid #e1251b;
+  border-radius: 50%;
+  margin-right: 2px;
+  background:
+    linear-gradient(45deg, transparent 45%, #e1251b 45%, #e1251b 55%, transparent 55%) center/100% 1.5px no-repeat,
+    linear-gradient(0deg, transparent 45%, #e1251b 45%, #e1251b 55%, transparent 55%) center/1.5px 100% no-repeat;
+}
+.ex-form .form-tip {
+  display: flex; align-items: flex-start; gap: 4px;
+  font-size: 11px;
+  color: #e1251b;
+  padding: 8px 0 0 22px;
+  line-height: 1.4;
+}
+.ex-form .form-tip .dot-icon {
+  width: 12px; height: 12px; flex-shrink: 0;
+  border-radius: 50%;
+  background: #e1251b;
+  color: #fff;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 9px; font-weight: 700;
+  margin-top: 1px;
+  position: relative;
+}
+.ex-form .form-tip .dot-icon::before { content: '!'; }
+
+/* 协议 */
+.ex-submit {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #f0f0f0;
+}
+.ex-submit .agreement {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 12px;
+  color: #666;
+  cursor: pointer;
+}
+.ex-submit .agreement input { display: none; }
+.ex-submit .agreement .ck-square {
+  width: 14px; height: 14px;
+  border: 1px solid #d0d0d0;
+  border-radius: 3px;
+  display: inline-block;
+  position: relative;
+  flex-shrink: 0;
+  background: #fff;
+}
+.ex-submit .agreement input:checked + .ck-square {
+  background: #e1251b;
+  border-color: #e1251b;
+}
+.ex-submit .agreement input:checked + .ck-square::after {
+  content: '';
+  position: absolute;
+  left: 3px; top: 0px;
+  width: 5px; height: 9px;
+  border: 2px solid #fff;
+  border-top: none; border-left: none;
+  transform: rotate(45deg);
+}
+.ex-submit .agreement .link { color: #e1251b; margin-left: 2px; cursor: pointer; }
+
+/* 底部操作栏 (下单页) */
+.order-action {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  max-width: 750px;
+  margin: 0 auto;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  height: calc(60px + env(safe-area-inset-bottom));
+  border-top: 0.5px solid #f0f0f0;
+  padding-bottom: env(safe-area-inset-bottom);
+  z-index: 20;
+}
+.order-action .cart-btn {
+  flex: 0 0 96px;
+  height: 60px;
+  background: #fff;
+  border: none;
+  font-size: 14px;
+  color: #1a1a1a;
+  font-weight: 500;
+  cursor: pointer;
+}
+.order-action .buy-btn {
+  flex: 1;
+  height: 60px;
+  background: linear-gradient(90deg, #ff5252 0%, #e1251b 100%);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 700;
+  position: relative;
+  overflow: hidden;
+}
+.order-action .buy-btn::before {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0; left: 50%;
+  width: 0.5px;
+  background: #fff;
+  opacity: 0.3;
+}
+
+/* —— 待收货回收单列表（绑定返现流程） —— */
+.ro-tip {
+  display: flex; gap: 10px; align-items: flex-start;
+  margin: 12px 12px 0; padding: 10px 12px;
+  background: #fdf0ef; border: 1px solid #ffd5da;
+  border-radius: 10px;
+  font-size: 12px; color: #8c4a45; line-height: 1.6;
+}
+.ro-tip .ro-tip-ico {
+  flex-shrink: 0; width: 20px; height: 20px; border-radius: 50%;
+  background: #e1251b; color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px;
+}
+.ro-card {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px;
+  border: 1px solid #eee; border-radius: 10px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: border-color .15s, background .15s;
+}
+.ro-card:last-child { margin-bottom: 0; }
+.ro-card .radio {
+  flex-shrink: 0; width: 18px; height: 18px; border-radius: 50%;
+  border: 1.5px solid #ccc; position: relative;
+}
+.ro-card.on { border-color: #e1251b; background: #fffafb; }
+.ro-card.on .radio { border-color: #e1251b; }
+.ro-card.on .radio::after {
+  content: ''; position: absolute; inset: 3px;
+  border-radius: 50%; background: #e1251b;
+}
+.ro-card .ro-info { flex: 1; min-width: 0; }
+.ro-card .ro-top {
+  display: flex; align-items: center; gap: 6px; margin-bottom: 4px;
+}
+.ro-card .ro-no { font-size: 10px; color: #999; }
+.ro-status {
+  font-size: 10px; color: #ff7800; background: #fff5e9;
+  border: 1px solid #ffe0b8;
+  padding: 1px 6px; border-radius: 8px;
+}
+.ro-card .ro-name {
+  font-size: 13px; color: #1a1a1a; font-weight: 500;
+  overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+}
+.ro-card .ro-sub { font-size: 11px; color: #999; margin-top: 3px; }
+.ro-card .ro-amt { text-align: right; flex-shrink: 0; }
+.ro-card .ro-amt .p { font-size: 16px; font-weight: 700; color: #e1251b; }
+.ro-card .ro-amt .hint { font-size: 10px; color: #999; }
+.ro-new {
+  margin: 12px; padding: 13px 14px;
+  background: #fff; border-radius: 12px;
+  display: flex; align-items: center; justify-content: space-between;
+  cursor: pointer;
+}
+.ro-new .t { font-size: 13px; color: #666; }
+.ro-new .go { font-size: 13px; color: #e1251b; font-weight: 600; }
+.ro-action { padding: 0; }
+.ro-total { flex: 1; padding-left: 14px; }
+.ro-total b { color: #e1251b; font-size: 18px; font-weight: 800; }
+.ro-total small { display: block; font-size: 10px; color: #999; }
+.ro-action .buy-btn { flex: 0 0 190px; }
+
+/* 绑定回收单卡（下单页） */
+.bind-note {
+  margin-top: 10px; padding: 8px 10px;
+  background: #fafafb; border-radius: 8px;
+  font-size: 11px; color: #999; line-height: 1.6;
+}
+.old-item .ro-no-line { font-size: 10px; color: #999; margin-top: 3px; }
+
+/* ck-sheet 绑定回收单块 */
+.ck-bind-status {
+  color: #ff7800; font-weight: 600;
+}
+
+/* 通用：分组标题 */
+.sec-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 18px 6px;
+  font-size: 12px;
+  color: #999;
+}
+
+/* —— 结算页（checkout） —— */
+.checkout-view {
+  position: fixed;
+  inset: 0;
+  z-index: 400;
+  transform: translateY(100%);
+  transition: transform 0.36s cubic-bezier(0.32, 0.72, 0, 1);
+  background: #f5f5f7;
+}
+.checkout-view.in { transform: translateY(0); }
+.checkout-view.out { transform: translateY(100%); }
+
+.checkout-scroll {
+  position: absolute;
+  top: 0; bottom: calc(64px + env(safe-area-inset-bottom));
+  left: 0; right: 0;
+  max-width: 750px;
+  margin: 0 auto;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  background: #f5f5f7;
+}
+.checkout-scroll .ck-nav {
+  position: sticky;
+  top: 0; z-index: 5;
+  display: grid;
+  grid-template-columns: 44px 1fr 44px;
+  align-items: center;
+  height: 50px;
+  background: #fff;
+  border-bottom: 0.5px solid #f0f0f0;
+  text-align: center;
+}
+.checkout-scroll .ck-nav .ck-back,
+.checkout-scroll .ck-nav .ck-close {
+  font-size: 26px; color: #1a1a1a; line-height: 1;
+  border: 0; background: none; cursor: pointer;
+}
+.checkout-scroll .ck-nav h1 {
+  font-size: 17px; font-weight: 700; margin: 0; color: #1a1a1a;
+}
+
+.ck-section {
+  background: #fff;
+  margin-top: 8px;
+  padding: 0 14px;
+}
+.ck-section.flat { margin-top: 8px; }
+
+/* 地址 */
+.ck-address {
+  padding: 14px 0 15px;
+  display: grid;
+  grid-template-columns: 22px 1fr 14px;
+  gap: 10px;
+  align-items: center;
+}
+.ck-pin {
+  width: 20px; height: 20px;
+  border: 2px solid #e1251b;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  position: relative;
+}
+.ck-pin::after {
+  content: ''; position: absolute;
+  width: 5px; height: 5px;
+  border: 1.5px solid #e1251b; border-radius: 50%;
+  left: 5px; top: 5px;
+}
+.ck-who { display: flex; gap: 12px; font-size: 15px; font-weight: 700; margin-bottom: 6px; color: #1a1a1a; }
+.ck-addr { font-size: 13px; line-height: 1.5; color: #555; }
+.ck-arrow { font-size: 20px; color: #c6c6c6; font-weight: 300; }
+.ck-airmail {
+  height: 4px;
+  background: repeating-linear-gradient(135deg, #e1251b 0 16px, #fff 16px 23px, #4a7fd1 23px 39px, #fff 39px 46px);
+}
+
+/* 通用行 */
+.ck-row {
+  min-height: 50px;
+  display: flex; align-items: center;
+  border-bottom: 0.5px solid #f0f0f0;
+  font-size: 14px;
+}
+.ck-row:last-child { border-bottom: 0; }
+.ck-row .label { color: #666; flex: 0 0 86px; }
+.ck-row .value { margin-left: auto; text-align: right; font-weight: 600; color: #1a1a1a; }
+.ck-row .value .sub { display: block; color: #999; font-weight: 400; font-size: 12px; margin-top: 4px; line-height: 1.45; }
+.ck-row .ck-arrow { margin-left: 6px; }
+
+/* 新品 */
+.ck-product { padding: 14px 0; display: grid; grid-template-columns: 86px 1fr; gap: 12px; }
+.ck-product .art {
+  width: 86px; height: 80px;
+  background: linear-gradient(135deg, #fde4c0, #f5c890);
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; color: #8a5018; font-weight: 600;
+}
+.ck-product .pname { font-size: 14px; line-height: 1.45; font-weight: 600; color: #1a1a1a; }
+.ck-product .psku { color: #999; font-size: 11px; margin-top: 5px; }
+.ck-product .pprice-line { display: flex; align-items: flex-end; margin-top: 9px; }
+.ck-product .pprice { color: #e1251b; font-weight: 800; font-size: 20px; }
+.ck-product .pprice .sym { font-size: 13px; }
+.ck-product .pqty { margin-left: auto; color: #555; font-size: 14px; }
+.ck-product .ptag {
+  display: inline-block; margin-top: 7px;
+  color: #e1251b; font-size: 11px;
+  background: #fff2f4; border-radius: 12px; padding: 3px 8px;
+}
+
+/* 促销行 */
+.ck-promo {
+  width: 100%; min-height: 52px;
+  padding: 0; border: 0;
+  border-bottom: 0.5px solid #f0f0f0;
+  background: #fff;
+  display: flex; align-items: center;
+  text-align: left; color: #1a1a1a;
+  cursor: pointer;
+  font: inherit;
+}
+.ck-promo:last-child { border-bottom: 0; }
+.ck-promo .name { font-size: 14px; }
+.ck-promo .right {
+  margin-left: auto; color: #888; font-size: 13px;
+  display: flex; align-items: center; gap: 6px;
+}
+.ck-promo.trade { min-height: 60px; }
+.ck-promo.trade .name { font-weight: 650; display: flex; align-items: center; gap: 5px; }
+.ck-promo.trade .right { color: #e1251b; font-weight: 650; }
+.ck-info {
+  width: 15px; height: 15px;
+  border: 1px solid #bbb; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 10px; color: #999; font-style: normal;
+}
+
+/* 备注 */
+.ck-notes { padding: 14px 0 16px; }
+.ck-notes h2 { font-size: 15px; margin: 0 0 11px; color: #1a1a1a; }
+.ck-notes textarea, .ck-notes input {
+  display: block; width: 100%;
+  border: 0; background: #f7f7f7;
+  padding: 12px; border-radius: 4px; outline: none;
+  font-size: 13px; color: #1a1a1a;
+}
+.ck-notes textarea { height: 78px; resize: none; margin-bottom: 10px; }
+.ck-notes input { height: 44px; }
+
+/* 合计 */
+.ck-totals { padding: 14px 0 16px; }
+.ck-total-line { display: flex; justify-content: space-between; margin: 9px 0; font-size: 14px; color: #555; }
+.ck-total-line strong { color: #111; font-weight: 700; }
+.ck-total-line .red { color: #e1251b; }
+.ck-total-line .total-bold strong { font-size: 16px; }
+
+/* 底部固定栏 */
+.checkout-action {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  max-width: 750px; margin: 0 auto;
+  background: #fff;
+  display: grid;
+  grid-template-columns: 1fr 142px;
+  height: calc(64px + env(safe-area-inset-bottom));
+  padding-bottom: env(safe-area-inset-bottom);
+  border-top: 0.5px solid #f0f0f0;
+  z-index: 20;
+}
+.checkout-action .pay { padding: 10px 14px; text-align: right; font-size: 13px; }
+.checkout-action .pay b { color: #e1251b; font-size: 20px; margin-left: 5px; }
+.checkout-action .pay small { display: block; color: #999; margin-top: 4px; font-size: 11px; }
+.checkout-action .submit {
+  border: 0; cursor: pointer;
+  background: linear-gradient(90deg, #ff5252, #e1251b);
+  color: #fff; font-size: 17px; font-weight: 700;
+}
+
+/* 以旧换新详情浮层（结算页内） */
+.ck-mask {
+  position: fixed; z-index: 500; inset: 0;
+  background: rgba(0,0,0,.52);
+  display: none; align-items: flex-end; justify-content: center;
+}
+.ck-mask.show { display: flex; }
+.ck-sheet {
+  width: 100%; max-width: 750px; margin: 0 auto;
+  max-height: 90vh; overflow: auto;
+  background: #fff;
+  border-radius: 16px 16px 0 0;
+  box-shadow: 0 -12px 35px rgba(0,0,0,.18);
+  animation: ck-rise .22s ease-out;
+}
+@keyframes ck-rise { from { transform: translateY(28px); opacity: .45; } to { transform: translateY(0); opacity: 1; } }
+.ck-handle { width: 38px; height: 4px; border-radius: 4px; background: #ddd; margin: 9px auto 2px; }
+.ck-sheet-head {
+  height: 50px; padding: 0 16px;
+  display: flex; align-items: center;
+  border-bottom: 0.5px solid #f0f0f0;
+}
+.ck-sheet-head h2 { font-size: 17px; margin: 0; color: #1a1a1a; }
+.ck-sheet-close { margin-left: auto; width: 32px; height: 32px; border: 0; background: #f5f5f5; border-radius: 50%; font-size: 22px; color: #777; cursor: pointer; }
+
+.ck-sheet-block { padding: 0 16px 14px; }
+.ck-sheet-block h3 { font-size: 14px; margin: 4px 0 12px; color: #1a1a1a; }
+/* 收款方式信息 */
+.ck-pay-info {
+  background: #fafafb; border-radius: 10px; padding: 4px 12px;
+}
+.ck-pay-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 11px 0; border-bottom: 0.5px solid #f0f0f0;
+}
+.ck-pay-row:last-child { border-bottom: none; }
+.ck-pay-lbl { font-size: 13px; color: #999; }
+.ck-pay-val { font-size: 14px; color: #1a1a1a; font-weight: 500; }
+/* 回收方式（承接下单页前置选择） */
+.ck-way-row {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 10px;
+}
+.ck-way-tag {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 12px;
+  border: 1px solid #e1251b;
+  border-radius: 14px;
+  background: #fff5f3;
+  color: #e1251b;
+  font-size: 12px;
+  font-weight: 600;
+}
+.ck-way-tag::before {
+  content: ''; width: 12px; height: 12px;
+  border: 1px solid #e1251b; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: radial-gradient(circle, #e1251b 0 3px, transparent 3.5px);
+}
+.ck-way-edit { font-size: 12px; color: #999; cursor: pointer; }
+.ck-way-steps { padding: 2px 0 10px; }
+
+.ck-old-card {
+  display: flex; align-items: center; gap: 10px;
+  background: #fafafb; border-radius: 10px; padding: 12px;
+}
+.ck-old-card .thumb {
+  width: 50px; height: 50px;
+  background: linear-gradient(135deg, #2a3a4a, #4a5a6a);
+  border-radius: 8px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 10px;
+}
+.ck-old-card .info { flex: 1; min-width: 0; }
+.ck-old-card .info .nm { font-size: 13px; color: #1a1a1a; margin-bottom: 3px; font-weight: 600; }
+.ck-old-card .info .sub { font-size: 11px; color: #999; }
+.ck-old-card .p { font-size: 16px; font-weight: 700; color: #e1251b; }
+
+.ck-fine { font-size: 10px; color: #999; line-height: 1.55; margin: 12px 0 0; }
+
+/* 浮窗内换新方式表单信息（只读展示） */
+.ck-ex-form {
+  background: #fafafb; border-radius: 10px; padding: 4px 12px; margin-top: 4px;
+}
+.ck-ex-row {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  padding: 11px 0; border-bottom: 0.5px solid #f0f0f0;
+}
+.ck-ex-row:last-child { border-bottom: none; }
+.ck-ex-lbl { font-size: 13px; color: #999; flex-shrink: 0; width: 56px; }
+.ck-ex-val { font-size: 13px; color: #1a1a1a; text-align: right; flex: 1; word-break: break-all; line-height: 1.5; }
+
+.ck-sheet-actions {
+  display: grid; grid-template-columns: 1fr 1.6fr; gap: 10px;
+  padding: 12px 16px calc(14px + env(safe-area-inset-bottom));
+  border-top: 0.5px solid #f0f0f0;
+  position: sticky; bottom: 0; background: #fff;
+}
+.ck-sheet-actions button { height: 44px; border-radius: 22px; font-size: 15px; cursor: pointer; }
+.ck-sheet-actions .later { border: 1px solid #ddd; background: #fff; color: #555; }
+.ck-sheet-actions .join { border: 0; background: linear-gradient(90deg, #ff5252, #e1251b); color: #fff; font-weight: 700; }
+
+/* 桌面浏览容器 */
+@media (min-width: 760px) {
+  body {
+    box-shadow: 0 0 24px rgba(0,0,0,0.08);
+  }
+}
+
+/* hover */
+.brand-item:hover, .model-item:hover, .cond-item:hover, .opt-pill:hover, .cat-tab:hover {
+  background: #fff0eb;
+}
+.brand-item.on:hover, .model-item.on:hover, .cond-item.on:hover, .opt-pill.on:hover, .cat-tab.on:hover {
+  background: #fff5f3;
+}
+</style>
+</head>
+<body>
+
+<div class="status-bar"></div>
+
+<!-- 顶部 nav（透明覆盖在 hero 上） -->
+<div class="top-nav">
+  <div class="nav-icon">‹</div>
+  <div class="nav-right">
+    <div class="nav-icon">⌕</div>
+    <div class="nav-icon">⋯</div>
+  </div>
+</div>
+
+<!-- 商品主图 -->
+<div class="hero">
+  <div class="hero-brand">LENOVO 联想</div>
+  <div class="hero-tag">新品上市</div>
+  <div class="hero-art">
+    <svg viewBox="0 0 360 280" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="screen" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#1976d2"/>
+          <stop offset="50%" stop-color="#1e88e5"/>
+          <stop offset="100%" stop-color="#42a5f5"/>
+        </linearGradient>
+        <linearGradient id="body" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#5a6470"/>
+          <stop offset="100%" stop-color="#3a4450"/>
+        </linearGradient>
+        <linearGradient id="base" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#4d5660"/>
+          <stop offset="100%" stop-color="#2c333c"/>
+        </linearGradient>
+      </defs>
+      <!-- Laptop body -->
+      <rect x="50" y="60" width="260" height="160" rx="8" fill="url(#body)"/>
+      <rect x="58" y="68" width="244" height="144" rx="3" fill="url(#screen)"/>
+      <!-- Screen wallpaper detail -->
+      <circle cx="260" cy="92" r="14" fill="#fff" opacity="0.2"/>
+      <circle cx="278" cy="110" r="6" fill="#fff" opacity="0.15"/>
+      <text x="180" y="140" text-anchor="middle" fill="#fff" font-size="22" font-weight="700" font-family="-apple-system, sans-serif">ThinkBook</text>
+      <text x="180" y="168" text-anchor="middle" fill="#fff" font-size="16" opacity="0.9" font-family="-apple-system, sans-serif">16p · 2026</text>
+      <rect x="86" y="195" width="188" height="2" rx="1" fill="#fff" opacity="0.3"/>
+      <!-- Camera -->
+      <circle cx="180" cy="74" r="2" fill="#777"/>
+      <!-- Base -->
+      <path d="M 30 220 L 330 220 L 348 244 L 12 244 Z" fill="url(#base)"/>
+      <rect x="160" y="220" width="40" height="3" rx="1.5" fill="#1a1f25"/>
+      <!-- Subtle shadow -->
+      <ellipse cx="180" cy="252" rx="160" ry="6" fill="#000" opacity="0.06"/>
+    </svg>
+  </div>
+  <div class="hero-dots">
+    <span class="on"></span><span></span><span></span><span></span><span></span>
+  </div>
+</div>
+
+<!-- 价格块 -->
+<div class="price-card">
+  <div class="sub-tag"><span style="font-size:9px;">✓</span> 国补享 15%</div>
+  <div class="price-row">
+    <span class="price-sym">¥</span>
+    <span class="price-num">15999</span>
+    <span class="price-orig">¥16999</span>
+    <div class="price-info"><div><strong>5万+</strong> 评价</div><div>99%好评</div></div>
+  </div>
+  <div class="tradein-strip">
+    <div class="tradein-strip-l">
+      <span class="lbl">以旧换新</span>
+      <span class="p"><span class="sym">¥</span>14499</span>
+    </div>
+    <div class="tradein-strip-r">最高补贴<b>1500</b>元 ›</div>
+  </div>
+</div>
+
+<!-- 标题 -->
+<div class="title-block">
+  <div class="title">联想 ThinkBook 16p 2026 / Ultra 7 251HX / 32G / 1T / RTX5060 全国联保 京东速配</div>
+  <div class="tags">
+    <span>几何系列</span>
+    <span class="blue">晒单有礼</span>
+    <span>PLUS价</span>
+    <span>白条分期</span>
+  </div>
+</div>
+
+<!-- 规格选择 -->
+<div class="spec">
+  <span class="lbl">已选</span>
+  <span class="val">官方标配 16G+1T/RTX5060 / 1个</span>
+  <span class="arrow">›</span>
+</div>
+
+<!-- 优惠券 + 以旧换新入口 -->
+<div class="group">
+  <div class="coupon-row">
+    <span class="coupon">🧧 满3000减300</span>
+    <span class="coupon">🧧 满5000减500</span>
+    <span class="coupon">🧧 满10000减800</span>
+  </div>
+
+  <!-- 核心互动入口 -->
+  <div class="tradein-entry" id="tradeinTrigger" role="button" aria-label="以旧换新">
+    <div class="tradein-icon">♻</div>
+    <div class="tradein-info">
+      <div class="tradein-title-row">
+        以旧换新 <span class="new-badge">补贴15%</span>
+      </div>
+      <div class="tradein-sub">
+        <span><b>高价</b>回收</span>
+        <span class="dot"><b>免费</b>邮寄</span>
+        <span class="dot"><b>极速</b>回款</span>
+      </div>
+    </div>
+    <div class="tradein-arrow">›</div>
+  </div>
+
+  <!-- 服务 / 配送 -->
+  <div class="line">
+    <span>服务</span><span class="v">厂保服务 / 7天无理由</span><span class="arrow">›</span>
+  </div>
+  <div class="line">
+    <span>送至</span><span class="v">北京 海淀区 · 有货 · 16点前下单明日送达</span><span class="arrow">›</span>
+  </div>
+</div>
+
+<!-- 评论 -->
+<div class="review-card">
+  <div class="review-hd">
+    <div class="review-title">用户评价 (304) <span>99%好评</span></div>
+    <div class="review-more">查看全部 ›</div>
+  </div>
+  <div class="review-tags">
+    <div class="review-tag">外观漂亮<em>(40)</em></div>
+    <div class="review-tag">运行极快<em>(23)</em></div>
+    <div class="review-tag">屏幕清晰<em>(20)</em></div>
+    <div class="review-tag">散热出色<em>(18)</em></div>
+    <div class="review-tag">手感不错<em>(12)</em></div>
+  </div>
+  <div class="review-item">
+    <div class="review-user">
+      <div class="review-avatar">M</div>
+      <div class="review-name">m****571</div>
+      <div class="review-stars">★★★★★</div>
+    </div>
+    <div class="review-text">thinkbook16p,屏幕细腻柔和,高色域强,外观很好。质感很强,用起来特别合适,下次还会回购！</div>
+  </div>
+  <div class="review-item">
+    <div class="review-user">
+      <div class="review-avatar">杰</div>
+      <div class="review-name">捷佳评测</div>
+      <div class="review-stars">★★★★★</div>
+    </div>
+    <div class="review-text">运行速度快,屏幕效果好,做工精细,值得购买。</div>
+  </div>
+</div>
+
+<!-- 看了又看 -->
+<div class="also-card">
+  <div class="also-title">看了又看</div>
+  <div class="also-row">
+    <div class="also-item"><div class="also-img">ThinkBook+</div><div class="also-name">ThinkBook 16+ 2025 Ultra7</div><div class="also-price">¥5999</div></div>
+    <div class="also-item"><div class="also-img">Legion</div><div class="also-name">拯救者 R7000P 2025</div><div class="also-price">¥6299</div></div>
+    <div class="also-item"><div class="also-img">XiaoXin</div><div class="also-name">小新 Pro 16 锐龙版</div><div class="also-price">¥5499</div></div>
+    <div class="also-item"><div class="also-img">MateBook</div><div class="also-name">华为 MateBook GT</div><div class="also-price">¥7999</div></div>
+  </div>
+</div>
+
+<!-- 底部操作栏 -->
+<div class="action-bar">
+  <div class="left-group">
+    <div class="action-icon"><div class="ic">🎧</div>客服</div>
+    <div class="action-icon"><div class="ic">⌂</div>店铺</div>
+    <div class="action-icon">
+      <div class="ic">🛒</div>购物车
+      <div class="badge">3</div>
+    </div>
+  </div>
+  <button class="btn-buy">立即购买</button>
+  <button class="btn-cart">加入购物车</button>
+</div>
+
+<!-- 遮罩 -->
+<div class="mask" id="mask"></div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- ============== 下单页面 ============== -->
+<!-- ============== 待收货回收单列表（绑定返现流程） ============== -->
+<div class="order-view" id="recycleView">
+  <div class="order-scroll">
+  <!-- 顶部 nav -->
+  <div class="order-nav">
+    <div class="back" id="recycleBack">‹</div>
+    <div class="title">选择回收单</div>
+    <div class="close-btn" id="recycleClose">×</div>
+  </div>
+
+  <!-- 提示 -->
+  <div class="ro-tip">
+    <span class="ro-tip-ico">♻</span>
+    <div>选择待收货的回收单与新品订单绑定，绑定后返换新补贴。</div>
+  </div>
+
+  <!-- 回收单列表 -->
+  <div class="order-card" style="padding-top:12px;">
+    <div class="card-head">
+      <div class="title">待收货回收单</div>
+    </div>
+    <div class="ro-card on" data-id="RO20260820001" data-name="拯救者 Y9000P 2023款 i9 RTX4060" data-sub="16G+1T · 95新" data-old="3940" data-subsidy="260">
+      <span class="radio"></span>
+      <div class="ro-info">
+        <div class="ro-top">
+          <span class="ro-no">回收单号 RO20260820001</span>
+          <span class="ro-status">待收货</span>
+        </div>
+        <div class="ro-name">拯救者 Y9000P 2023款 i9 RTX4060</div>
+        <div class="ro-sub">16G+1T · 95新 · 上门回收</div>
+        <div class="ro-sub">回收预估 ¥3,940</div>
+      </div>
+      <div class="ro-amt">
+        <div class="p">¥260</div>
+        <div class="hint">绑定后返换新补贴</div>
+      </div>
+    </div>
+    <div class="ro-card" data-id="RO20260823002" data-name="ThinkBook 14 2022款 i5" data-sub="16G+512G · 90新" data-old="1600" data-subsidy="260">
+      <span class="radio"></span>
+      <div class="ro-info">
+        <div class="ro-top">
+          <span class="ro-no">回收单号 RO20260823002</span>
+          <span class="ro-status">待收货</span>
+        </div>
+        <div class="ro-name">ThinkBook 14 2022款 i5</div>
+        <div class="ro-sub">16G+512G · 90新 · 邮寄回收</div>
+        <div class="ro-sub">回收预估 ¥1,600</div>
+      </div>
+      <div class="ro-amt">
+        <div class="p">¥260</div>
+        <div class="hint">绑定后返换新补贴</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 没有回收单 → 去估价（原流程入口） -->
+  <div class="ro-new" id="roNew">
+    <div class="t">没有可绑定的回收单？</div>
+    <div class="go">立即估价换新 ›</div>
+  </div>
+
+  </div><!-- /order-scroll -->
+
+  <!-- 底部固定栏 -->
+  <div class="order-action ro-action">
+    <div class="ro-total">绑定后返换新补贴 <b id="roTotal">¥260</b><small>旧机回收成功后返</small></div>
+    <button class="buy-btn" id="bindBuyBtn">绑定回收单并购买</button>
+  </div>
+</div>
+
+<div class="order-view" id="orderView">
+  <div class="order-scroll">
+  <!-- 顶部 nav -->
+  <div class="order-nav">
+    <div class="back" id="orderBack">‹</div>
+    <div class="title">以旧换新</div>
+    <div class="close-btn" id="orderClose">×</div>
+  </div>
+
+  <!-- 步骤进度 -->
+  <div class="steps-bar">
+    <div class="step-item done">
+      <div class="dot">✓</div>
+      <span id="orderStep1Lbl">选择旧品</span>
+    </div>
+    <div class="step-divider"></div>
+    <div class="step-item active">
+      <div class="dot">2</div>
+      <span>下单</span>
+    </div>
+    <div class="step-divider"></div>
+    <div class="step-item">
+      <div class="dot">3</div>
+      <span id="orderStep3Lbl">取旧送新</span>
+    </div>
+  </div>
+
+  <!-- 新品卡 -->
+  <div class="order-card">
+    <div class="card-head">
+      <div class="title">新品</div>
+      <div class="tag">国补推荐</div>
+    </div>
+    <div class="new-product">
+      <div class="thumb">ThinkBook<br>16p</div>
+      <div class="info">
+        <div class="name">联想 ThinkBook 16p 2026 / Ultra 7 251HX / 32G / 1T / RTX5060</div>
+        <div class="price-row">
+          <span class="sym">¥</span>
+          <span class="num" id="orderFinalPrice">9,979</span>
+          <span class="hint">预估国补后优惠换新价</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 价格计算 -->
+    <div class="price-math">
+      <div class="pm-scroll">
+        <div class="cell">
+          <div class="v">¥15,999</div>
+          <div class="lbl">单品购买</div>
+        </div>
+        <span class="op">−</span>
+        <div class="cell">
+          <div class="v">¥260</div>
+          <div class="lbl">优惠券</div>
+        </div>
+        <span class="op">−</span>
+        <div class="cell">
+          <div class="v">¥300</div>
+          <div class="lbl">教育认证优惠</div>
+        </div>
+        <span class="op">−</span>
+        <div class="cell red">
+          <div class="v">¥1,500</div>
+          <div class="lbl">国家补贴</div>
+        </div>
+      </div>
+      <span class="op pm-op-fixed">−</span>
+      <div class="cell highlight-old cell-pair">
+        <div class="pair-row">
+          <span class="pair-lbl">旧品抵扣</span>
+          <span class="pair-val" id="orderOldPrice">¥3,750</span>
+        </div>
+        <div class="pair-row">
+          <span class="pair-lbl">换新补贴</span>
+          <span class="pair-val plus" id="orderSubsidyAmt">+¥260</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="payment-note">
+      本次支付预估 <b id="orderEstPay">¥15,739</b>（领国补可减 <b>¥1,500</b>，教育认证减 <b>¥300</b>）；<br><span id="orderReturnNote">回收旧机再反<b>￥4,010</b>：旧机抵扣金额<b>￥3,750</b>（旧机回收成功后发放）+换新补贴金额<b>￥260</b>（新机签收15天后发放）</span>
+    </div>
+  </div>
+
+  <!-- 旧品信息（展示不可选择） -->
+  <div class="order-card" id="oldCard" style="margin-top:8px;">
+    <div class="card-head">
+      <div class="title">旧品信息</div>
+    </div>
+
+    <div class="old-item" style="margin-top:4px;">
+      <div class="thumb">📱</div>
+      <div class="info">
+        <div class="name" id="orderOldName">ThinkBook 16p 2024款 i7 RTX4060</div>
+        <div class="sub" id="orderOldSub">16G+1T · 95新</div>
+      </div>
+      <div class="price-side">
+        <div class="p" id="orderOldAmt">¥3,750</div>
+        <div class="hint">回收后返</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 绑定回收单卡（绑定返现流程） -->
+  <div class="order-card" id="boundCard" style="margin-top:8px;display:none;">
+    <div class="card-head">
+      <div class="title">已绑定回收单</div>
+      <div class="tag">待收货</div>
+    </div>
+    <div class="old-item">
+      <div class="thumb">📱</div>
+      <div class="info">
+        <div class="name" id="boundName">拯救者 Y9000P 2023款 i9 RTX4060</div>
+        <div class="sub" id="boundSub">16G+1T · 95新</div>
+        <div class="ro-no-line" id="boundNo">回收单号 RO20260820001</div>
+        <div class="ro-no-line" id="boundOld">回收预估 ¥3,940</div>
+      </div>
+      <div class="price-side">
+        <div class="p" id="boundAmt">¥260</div>
+        <div class="hint">绑定后返换新补贴</div>
+      </div>
+    </div>
+    <div class="bind-note">绑定后返换新补贴，于旧机回收成功后返还；旧机回收款按回收单正常返还，若回收单取消或质检不通过，换新补贴随之取消。</div>
+  </div>
+
+  <!-- 换新方式（估价流程） -->
+  <div class="order-card" id="wayCard">
+    <div class="card-head">
+      <div class="title">换新方式</div>
+    </div>
+
+    <!-- 收款方式：置于「换新方式」字眼下方、tab 签之上 -->
+    <div class="pay-row" id="payWayEntry" role="button" aria-label="收款方式" style="margin:12px 14px 8px;border-bottom:1px solid #f0f0f0;padding-bottom:12px;">
+      <span class="lbl">收款方式</span>
+      <span class="pay-link">
+        <span class="status" id="payWayStatus">请填写支付宝账号</span>
+        <span class="arrow">›</span>
+      </span>
+    </div>
+
+    <!-- 三 tab -->
+    <div class="exchange-tabs" id="exchangeTabs">
+      <div class="tab on" data-tab="home">上门回收</div>
+      <div class="tab" data-tab="mail">邮寄回收</div>
+    </div>
+
+    <!-- 步骤时间线 -->
+    <div class="ex-steps">
+      <div class="step">
+        <div class="ic" id="exStepIc1"><svg viewBox="0 0 24 24" fill="none" stroke="#7e7e7e" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.2"/><path d="M5.5 19.5c.8-3.4 3.5-5.2 6.5-5.2s5.7 1.8 6.5 5.2"/><path d="M9.2 5l1.3-1.3M14.8 5l-1.3-1.3" /></svg></div>
+        <div class="lbl" id="exStepLbl1">工程师上门</div>
+      </div>
+      <span class="dash"></span>
+      <div class="step">
+        <div class="ic" id="exStepIc2"><svg viewBox="0 0 24 24" fill="none" stroke="#7e7e7e" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v5c0 4.4-3.2 8.6-8 10-4.8-1.4-8-5.6-8-10V6l8-3z"/><path d="M9 12l2 2 4-4"/></svg></div>
+        <div class="lbl" id="exStepLbl2">当面验机</div>
+      </div>
+      <span class="dash"></span>
+      <div class="step">
+        <div class="ic" id="exStepIc3"><svg viewBox="0 0 24 24" fill="none" stroke="#7e7e7e" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v11a2 2 0 002 2h14a2 2 0 002-2v-9h-4a2 2 0 010-4h4V5a2 2 0 00-2-2H5a2 2 0 00-2 2v2"/><circle cx="16" cy="13" r="1.3" fill="#7e7e7e" stroke="none"/></svg></div>
+        <div class="lbl" id="exStepLbl3">确认回收</div>
+      </div>
+    </div>
+
+    <!-- 表单：上门 -->
+    <div class="ex-form" id="exFormHome">
+      <div class="form-row">
+        <span class="mark required">*</span>
+        <input class="f-input" id="exNameHome" placeholder="请输入联系人姓名" />
+      </div>
+      <div class="form-row">
+        <span class="mark optional"></span>
+        <input class="f-input" id="exPhoneHome" value="15810525479" />
+      </div>
+      <div class="form-row has-arrow addr">
+        <span class="mark optional"></span>
+        <div class="f-static" id="exAddrHome">北京市 北京市 海淀区 马连洼街道 软件园西三路在联想总部(北京)园区 附近</div>
+        <span class="arrow">›</span>
+      </div>
+      <div class="form-tip"><span class="dot-icon"></span>当前位置不支持上门，建议选择邮寄回收或变更上门地址</div>
+      <div class="form-row has-arrow">
+        <span class="mark required">*</span>
+        <div class="f-static muted" id="exTimeHome">请选择上门时间</div>
+        <span class="arrow">›</span>
+      </div>
+    </div>
+
+    <!-- 表单：邮寄 -->
+    <div class="ex-form" id="exFormMail" style="display:none;">
+      <div class="form-row">
+        <span class="mark required">*</span>
+        <input class="f-input" id="exNameMail" placeholder="请输入联系人姓名" />
+      </div>
+      <div class="form-row">
+        <span class="mark optional"></span>
+        <input class="f-input" id="exPhoneMail" value="15810525479" />
+      </div>
+      <div class="form-row has-arrow addr">
+        <span class="mark optional"></span>
+        <div class="f-static" id="exAddrMail">北京市 北京市 海淀区 马连洼街道 软件园西三路在联想总部(北京)园区 附近</div>
+        <span class="arrow">›</span>
+      </div>
+      <div class="form-row has-arrow">
+        <span class="mark required">*</span>
+        <div class="f-static muted" id="exTimeMail">请选择取件时间</div>
+        <span class="arrow">›</span>
+      </div>
+    </div>
+
+    <!-- 协议 -->
+    <div class="ex-submit">
+      <label class="agreement">
+        <input type="checkbox" id="exAgree" />
+        <span class="ck-square"></span>
+        <span class="agree-txt">我已经阅读并同意<a class="link" href="https://huishou.lenovo.com.cn/tradeagreement" target="_blank" rel="noopener" onclick="event.preventDefault();event.stopPropagation();window.open('https://huishou.lenovo.com.cn/tradeagreement','_blank');">联想以旧换新协议</a></span>
+      </label>
+    </div>
+  </div>
+
+  </div><!-- /order-scroll -->
+
+  <!-- 底部固定栏 -->
+  <div class="order-action">
+    <button class="cart-btn" id="addToCartBtn">加入购物车</button>
+    <button class="buy-btn" id="exchangeNowBtn">立即换新</button>
+  </div>
+</div>
+
+<!-- ============== 添加收款信息 浮窗（单层） ============== -->
+<div class="alipay-mask" id="alipayMask" style="display:none;"></div>
+<div class="alipay-panel" id="alipayPanel" style="display:none;">
+  <div class="ap-nav">
+    <span class="ap-close" id="alipayClose">×</span>
+    <span class="ap-title">添加收款信息</span>
+  </div>
+
+  <!-- 视图1：填写 -->
+  <div class="ap-view" id="apFormView">
+    <div class="ap-body">
+      <div class="ap-field">
+        <input class="ap-input" id="alipayName" placeholder="请输入姓名" />
+      </div>
+      <div class="ap-field">
+        <input class="ap-input" id="alipayAccount" placeholder="请输入支付宝账号" inputmode="numeric" maxlength="20" />
+      </div>
+      <div class="alipay-tip"><a href="javascript:void(0)">如何查找支付宝账号?</a></div>
+    </div>
+    <div class="ap-foot">
+      <button class="ap-submit" id="alipaySubmit">确认提交</button>
+    </div>
+  </div>
+
+  <!-- 视图2：确认（同一浮窗内切换，非独立弹窗） -->
+  <div class="ap-view" id="apConfirmView" style="display:none;">
+    <div class="ap-body">
+      <div class="ap-confirm-title">请确认收款信息</div>
+      <div class="ap-line"><b>姓名：</b><span id="confirmName"></span></div>
+      <div class="ap-line"><b>支付宝账号：</b><span id="confirmAccount"></span></div>
+      <ol class="ap-tips">
+        <li>请确认您填写的收款信息真实无误。</li>
+        <li>请确保您输入的姓名与收款账户(支付宝-个人)实名认证的姓名一致。</li>
+        <li>因收款信息填写有误导致的打款延误,平台不承担责任。</li>
+      </ol>
+    </div>
+    <div class="ap-foot ap-foot-2">
+      <button class="ap-btn-cancel" id="confirmCancel">取消</button>
+      <button class="ap-btn-ok" id="confirmOk">确定</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============== 结算页 ============== -->
+<div class="checkout-view" id="checkoutView">
+  <div class="checkout-scroll">
+    <!-- 顶部 nav -->
+    <div class="ck-nav">
+      <button class="ck-back" id="ckBack" aria-label="返回">‹</button>
+      <h1>结算中心</h1>
+      <button class="ck-close" id="ckClose" aria-label="关闭">×</button>
+    </div>
+
+    <!-- 收货地址 -->
+    <section class="ck-section">
+      <div class="ck-address">
+        <span class="ck-pin" aria-hidden="true"></span>
+        <div>
+          <div class="ck-who"><span>收货人：王先生</span><span>181****4147</span></div>
+          <div class="ck-addr">天津市东丽区东丽湖街道空港经济区科技大厦 A 座 1801</div>
+        </div>
+        <span class="ck-arrow">›</span>
+      </div>
+    </section>
+    <div class="ck-airmail"></div>
+
+    <!-- 支付方式 -->
+    <section class="ck-section">
+      <div class="ck-row">
+        <span class="label">支付方式</span>
+        <span class="value">在线支付</span>
+        <span class="ck-arrow">›</span>
+      </div>
+    </section>
+
+    <!-- 新品 -->
+    <section class="ck-section ck-product">
+      <div class="art">ThinkBook<br>16p</div>
+      <div>
+        <div class="pname">联想 ThinkBook 16p 2026 / Ultra 7 251HX / 32G / 1T / RTX5060</div>
+        <div class="psku">Ultra 7 251HX / 32GB / 1TB / RTX5060</div>
+        <div class="pprice-line">
+          <span class="pprice"><span class="sym">¥</span><span id="ckProductPrice">15,999</span></span>
+          <span class="pqty">×1</span>
+        </div>
+        <span class="ptag">支持 14 天无忧退换</span>
+      </div>
+    </section>
+
+    <!-- 服务 / 配送 / 运费险 -->
+    <section class="ck-section">
+      <div class="ck-row">
+        <span class="label">服务</span>
+        <span class="value">可选增值服务</span>
+        <span class="ck-arrow">›</span>
+      </div>
+      <div class="ck-row">
+        <span class="label">配送</span>
+        <span class="value">快递配送<span class="sub">16:00 前完成下单，预计后天送达</span></span>
+        <span class="ck-arrow">›</span>
+      </div>
+      <div class="ck-row">
+        <span class="label">退货运费险</span>
+        <span class="value">商家赠送<span class="sub">售后有效期内退货享运费补贴</span></span>
+        <span class="ck-arrow">›</span>
+      </div>
+    </section>
+
+    <!-- 促销行 -->
+    <section class="ck-section">
+      <button class="ck-promo" type="button">
+        <span class="name">发票</span>
+        <span class="right">电子（个人） <span class="ck-arrow">›</span></span>
+      </button>
+      <button class="ck-promo" type="button">
+        <span class="name">优惠券</span>
+        <span class="right">已抵扣 <span class="red">¥260</span> <span class="ck-arrow">›</span></span>
+      </button>
+      <button class="ck-promo" type="button">
+        <span class="name">优惠码</span>
+        <span class="right">请输入优惠码 <span class="ck-arrow">›</span></span>
+      </button>
+      <button class="ck-promo trade" type="button" id="ckTradeBtn">
+        <span class="name">以旧换新 <i class="ck-info">i</i></span>
+        <span class="right" id="ckTradeValue">已选 · 旧机预计返 ¥3,750 ›</span>
+      </button>
+    </section>
+
+    <!-- 订单备注 -->
+    <section class="ck-section ck-notes">
+      <h2>订单备注</h2>
+      <textarea placeholder="给商家留言（选填，100 字以内）"></textarea>
+      <input placeholder="客服经理编号">
+    </section>
+
+    <!-- 合计 -->
+    <section class="ck-section ck-totals">
+      <div class="ck-total-line"><span>商品金额</span><strong>¥15,999</strong></div>
+      <div class="ck-total-line"><span>优惠</span><span class="red" id="ckTotalYouhui">-¥2,060</span></div>
+      <div class="ck-total-line"><span>运费</span><span class="red">+¥0</span></div>
+    </section>
+  </div><!-- /checkout-scroll -->
+
+  <!-- 底部固定栏 -->
+  <div class="checkout-action">
+    <div class="pay">实付款：<b><span class="sym" style="font-size:13px;">¥</span><span id="ckPayAmount">13,939</span></b><small id="ckPayNote">预估旧机返 <span id="ckReturn">￥3750</span>，换新补贴 ￥260</small></div>
+    <button class="submit" id="ckSubmitBtn">提交订单</button>
+  </div>
+</div>
+
+<!-- 以旧换新详情浮层（结算页内） -->
+<div class="ck-mask" id="ckMask" role="dialog" aria-modal="true">
+  <section class="ck-sheet">
+    <div class="ck-handle"></div>
+    <header class="ck-sheet-head">
+      <h2>以旧换新</h2>
+      <button class="ck-sheet-close" id="ckSheetClose" aria-label="关闭">×</button>
+    </header>
+    <div class="ck-sheet-block" id="ckBindBlock" style="display:none;">
+      <h3>已绑定回收单</h3>
+      <div class="ck-old-card">
+        <div class="thumb">📱</div>
+        <div class="info">
+          <div class="nm" id="ckBindName">拯救者 Y9000P 2023款 i9 RTX4060</div>
+          <div class="sub" id="ckBindSub">16G+1T · 95新</div>
+          <div class="sub" id="ckBindOld">回收预估 ¥3,940</div>
+        </div>
+        <div class="p">¥<span id="ckBindAmt">260</span></div>
+      </div>
+      <div class="ck-ex-form">
+        <div class="ck-ex-row">
+          <span class="ck-ex-lbl">回收单号</span>
+          <span class="ck-ex-val" id="ckBindNo">—</span>
+        </div>
+        <div class="ck-ex-row">
+          <span class="ck-ex-lbl">状态</span>
+          <span class="ck-ex-val ck-bind-status">待收货</span>
+        </div>
+        <div class="ck-ex-row">
+          <span class="ck-ex-lbl">换新补贴</span>
+          <span class="ck-ex-val" id="ckBindSubsidy">¥260 · 绑定后返</span>
+        </div>
+        <div class="ck-ex-row">
+          <span class="ck-ex-lbl">返现方式</span>
+          <span class="ck-ex-val">旧机回收成功后返</span>
+        </div>
+      </div>
+      <p class="ck-fine">换新补贴于旧机回收成功后返还；若回收单取消或质检不通过，换新补贴随之取消，新品订单按实付款继续履约。</p>
+    </div>
+    <div class="ck-sheet-block" id="ckOldBlock">
+      <h3>已选回收旧机</h3>
+      <div class="ck-old-card">
+        <div class="thumb">📱</div>
+        <div class="info">
+          <div class="nm" id="ckOldName">ThinkBook 16p 2024款 i7 RTX4060</div>
+          <div class="sub" id="ckOldSub">16G+1T · 95新</div>
+        </div>
+        <div class="p">¥<span id="ckOldAmt">3,750</span></div>
+      </div>
+    </div>
+    <div class="ck-sheet-block" id="ckWayBlock">
+      <h3>回收方式</h3>
+      <div class="ck-way-row">
+        <span class="ck-way-tag" id="ckWayTag">上门回收</span>
+        <span class="ck-way-edit" id="ckWayEdit">修改 ›</span>
+      </div>
+      <div class="ex-steps ck-way-steps">
+        <div class="step">
+          <div class="ic" id="ckWayIc1"></div>
+          <div class="lbl" id="ckWayLbl1">工程师上门</div>
+        </div>
+        <span class="dash"></span>
+        <div class="step">
+          <div class="ic" id="ckWayIc2"></div>
+          <div class="lbl" id="ckWayLbl2">当面验机</div>
+        </div>
+        <span class="dash"></span>
+        <div class="step">
+          <div class="ic" id="ckWayIc3"></div>
+          <div class="lbl" id="ckWayLbl3">确认回收</div>
+        </div>
+      </div>
+      <div class="ck-ex-form">
+        <div class="ck-ex-row">
+          <span class="ck-ex-lbl">联系人</span>
+          <span class="ck-ex-val" id="ckExName">—</span>
+        </div>
+        <div class="ck-ex-row">
+          <span class="ck-ex-lbl">手机号</span>
+          <span class="ck-ex-val" id="ckExPhone">—</span>
+        </div>
+        <div class="ck-ex-row">
+          <span class="ck-ex-lbl">地址</span>
+          <span class="ck-ex-val" id="ckExAddr">—</span>
+        </div>
+        <div class="ck-ex-row">
+          <span class="ck-ex-lbl">时间</span>
+          <span class="ck-ex-val" id="ckExTime">—</span>
+        </div>
+      </div>
+      <p class="ck-fine">页面金额为最高参考回收价，最终价格以设备品牌、型号、配置、外观及功能检测结果为准。</p>
+    </div>
+    <div class="ck-sheet-block" id="ckPayBlock">
+      <h3>收款方式</h3>
+      <div class="ck-pay-info">
+        <div class="ck-pay-row">
+          <span class="ck-pay-lbl">姓名</span>
+          <span class="ck-pay-val" id="ckPayName">—</span>
+        </div>
+        <div class="ck-pay-row">
+          <span class="ck-pay-lbl">支付宝账号</span>
+          <span class="ck-pay-val" id="ckPayAccount">—</span>
+        </div>
+      </div>
+    </div>
+    <div class="ck-sheet-actions">
+      <button class="later" id="ckLater">暂不参与</button>
+      <button class="join" id="ckJoin">确认参与以旧换新</button>
+    </div>
+  </section>
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  // —— 浮层开关 ——
+  const trigger = document.getElementById('tradeinTrigger');
+
+  // —— 待收货回收单列表（绑定返现流程） ——
+  const recycleView = document.getElementById('recycleView');
+  const recycleBack = document.getElementById('recycleBack');
+  const recycleClose = document.getElementById('recycleClose');
+  let boundRO = null; // 当前绑定的回收单 {id, name, sub, old, subsidy}
+
+  function openRecycle() {
+    recycleView.classList.add('in');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeRecycle() {
+    recycleView.classList.remove('in');
+    recycleView.classList.add('out');
+    setTimeout(() => { recycleView.classList.remove('out'); }, 360);
+  }
+  recycleBack.addEventListener('click', closeRecycle);
+  recycleClose.addEventListener('click', () => {
+    closeRecycle();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // 选择回收单
+  const roCards = document.querySelectorAll('#recycleView .ro-card');
+  roCards.forEach(card => {
+    card.addEventListener('click', () => {
+      roCards.forEach(c => c.classList.remove('on'));
+      card.classList.add('on');
+      updateRoTotal();
+    });
+  });
+  function currentRoCard() {
+    return document.querySelector('#recycleView .ro-card.on');
+  }
+  function updateRoTotal() {
+    const card = currentRoCard();
+    const subsidy = parseInt(card.dataset.subsidy, 10);
+    document.getElementById('roTotal').textContent = '¥' + subsidy.toLocaleString();
+  }
+
+  // 没有回收单 → 直接进以旧换新下单页（估价换新）
+  document.getElementById('roNew').addEventListener('click', () => {
+    boundRO = null;
+    closeRecycle();
+    setTimeout(openOrder, 280);
+  });
+
+  // 绑定回收单并购买 → 直接进入结算页（绑定模式，跳过下单页）
+  document.getElementById('bindBuyBtn').addEventListener('click', () => {
+    const card = currentRoCard();
+    boundRO = {
+      id: card.dataset.id,
+      name: card.dataset.name,
+      sub: card.dataset.sub,
+      old: parseInt(card.dataset.old, 10),
+      subsidy: parseInt(card.dataset.subsidy, 10),
+    };
+    closeRecycle();
+    setTimeout(openCheckout, 280);
+  });
+
+  trigger.addEventListener('click', openRecycle);
+
+  // —— 下单页面交互 ——
+  const orderView = document.getElementById('orderView');
+  const orderBack = document.getElementById('orderBack');
+  const orderClose = document.getElementById('orderClose');
+
+  // 用旧机金额、型号等信息回填订单页
+  // 绑定模式：下单页切换为"已绑定回收单"展示
+  function setBindMode(on) {
+    document.getElementById('oldCard').style.display = on ? 'none' : '';
+    document.getElementById('boundCard').style.display = on ? '' : 'none';
+    document.getElementById('wayCard').style.display = on ? 'none' : '';
+    document.getElementById('orderStep1Lbl').textContent = on ? '绑定回收单' : '选择旧品';
+    document.getElementById('orderStep3Lbl').textContent = on ? '回收返现' : '取旧送新';
+  }
+
+  function syncOrderView() {
+    if (boundRO) {
+      // —— 绑定回收单（待收货）流程：展示价格为绑定后返换新补贴 ——
+      setBindMode(true);
+      const total = boundRO.old + boundRO.subsidy;
+      document.getElementById('boundName').textContent = boundRO.name;
+      document.getElementById('boundSub').textContent = boundRO.sub;
+      document.getElementById('boundNo').textContent = '回收单号 ' + boundRO.id;
+      document.getElementById('boundOld').textContent = '回收预估 ¥' + boundRO.old.toLocaleString();
+      document.getElementById('boundAmt').textContent = '¥' + boundRO.subsidy.toLocaleString();
+      document.getElementById('orderOldPrice').textContent = '¥' + boundRO.old.toLocaleString();
+      document.getElementById('orderSubsidyAmt').textContent = '+¥' + boundRO.subsidy.toLocaleString();
+      document.getElementById('orderEstPay').textContent = '¥' + (15999 - 260).toLocaleString();
+      document.getElementById('orderReturnNote').innerHTML = '绑定后返换新补贴 <b>¥' + boundRO.subsidy.toLocaleString() + '</b>，于旧机回收成功后返还。';
+      document.getElementById('orderFinalPrice').textContent = (15999 - 260 - 300 - 1500 - total).toLocaleString();
+      return;
+    }
+    setBindMode(false);
+    const oi = getOldInfo();
+    const base = oi.old;
+    const formatted = base.toLocaleString();
+    const combined = base + 260;                // 旧品抵扣 + 换新补贴
+    document.getElementById('orderReturnNote').innerHTML = '回收旧机再反<b>￥' + (base + 260) + '</b>：旧机抵扣金额<b>￥' + base + '</b>（旧机回收成功后发放）+换新补贴金额<b>￥260</b>（新机签收15天后发放）';
+    document.getElementById('orderOldPrice').textContent = '¥' + formatted;
+    document.getElementById('orderSubsidyAmt').textContent = '+¥260';
+    document.getElementById('orderOldAmt').textContent = '¥' + formatted;
+    // 本次支付预估 = 单品购买 - 优惠券
+    document.getElementById('orderEstPay').textContent = '¥' + (15999 - 260).toLocaleString();
+    document.getElementById('orderOldName').textContent = oi.name;
+    document.querySelector('.old-item .sub').textContent = oi.storage + ' · ' + oi.cond;
+
+    // 预估国补后优惠换新价 = 15999 - 260(优惠券) - 300(教育认证) - 1500(国补) - (旧品抵扣 + 260换新补贴)
+    const finalPrice = 15999 - 260 - 300 - 1500 - combined;
+    document.getElementById('orderFinalPrice').textContent = finalPrice.toLocaleString();
+  }
+
+  // 旧品信息（展示不可选择，固定默认旧机）
+  function getOldInfo() {
+    return {
+      name: 'ThinkBook 16p 2024款 i7 RTX4060',
+      old: 3750,
+      storage: '16G+1T',
+      cond: '95新',
+    };
+  }
+
+  function openOrder() {
+    syncOrderView();
+    orderView.classList.add('in');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeOrder() {
+    orderView.classList.remove('in');
+    orderView.classList.add('out');
+    setTimeout(() => {
+      orderView.classList.remove('out');
+      document.body.style.overflow = '';
+    }, 360);
+  }
+  orderBack.addEventListener('click', () => {
+    closeOrder();
+    if (boundRO) setTimeout(openRecycle, 280); // 绑定流程：返回回收单列表
+  });
+  orderClose.addEventListener('click', () => {
+    closeOrder();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // 换新方式：tab 切换 + 步骤时间线 + 表单
+  const STEP_DATA = {
+    home: {
+      label1: '工程师上门',
+      label2: '当面验机',
+      ic1: '<svg viewBox="0 0 24 24" fill="none" stroke="#7e7e7e" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.2"/><path d="M5.5 19.5c.8-3.4 3.5-5.2 6.5-5.2s5.7 1.8 6.5 5.2"/><path d="M9.2 5l1.3-1.3M14.8 5l-1.3-1.3" /></svg>',
+      ic2: '<svg viewBox="0 0 24 24" fill="none" stroke="#7e7e7e" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v5c0 4.4-3.2 8.6-8 10-4.8-1.4-8-5.6-8-10V6l8-3z"/><path d="M9 12l2 2 4-4"/></svg>',
+    },
+    mail: {
+      label1: '物流取件',
+      label2: '专业验机',
+      ic1: '<svg viewBox="0 0 24 24" fill="none" stroke="#7e7e7e" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h11v9H3z"/><path d="M14 10h4l3 3v3h-7z"/><circle cx="7" cy="17.5" r="1.6"/><circle cx="17.5" cy="17.5" r="1.6"/><path d="M9 4v3M6 4v3M12 4v3"/></svg>',
+      ic2: '<svg viewBox="0 0 24 24" fill="none" stroke="#7e7e7e" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-3.5-3.5"/><path d="M9 11l1.5 1.5L13 10"/></svg>',
+    },
+  };
+  const IC3 = '<svg viewBox="0 0 24 24" fill="none" stroke="#7e7e7e" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v11a2 2 0 002 2h14a2 2 0 002-2v-9h-4a2 2 0 010-4h4V5a2 2 0 00-2-2H5a2 2 0 00-2 2v2"/><circle cx="16" cy="13" r="1.3" fill="#7e7e7e" stroke="none"/></svg>';
+
+  const tabs = document.querySelectorAll('#exchangeTabs .tab');
+  const WAY_NAME = { home: '上门回收', mail: '邮寄回收' };
+  let currentWay = 'home';
+  const exStepIc1 = document.getElementById('exStepIc1');
+  const exStepIc2 = document.getElementById('exStepIc2');
+  const exStepIc3 = document.getElementById('exStepIc3');
+  const exStepLbl1 = document.getElementById('exStepLbl1');
+  const exStepLbl2 = document.getElementById('exStepLbl2');
+  const exStepLbl3 = document.getElementById('exStepLbl3');
+  const exFormHome = document.getElementById('exFormHome');
+  const exFormMail = document.getElementById('exFormMail');
+  const payWayEntry = document.getElementById('payWayEntry');
+
+  function switchExchangeTab(key) {
+    currentWay = key;
+    tabs.forEach(t => t.classList.toggle('on', t.dataset.tab === key));
+    const data = STEP_DATA[key];
+    exStepIc1.innerHTML = data.ic1;
+    exStepIc2.innerHTML = data.ic2;
+    exStepIc3.innerHTML = IC3;
+    exStepLbl1.textContent = data.label1;
+    exStepLbl2.textContent = data.label2;
+    exStepLbl3.textContent = '确认回收';
+    exFormHome.style.display = (key === 'home') ? '' : 'none';
+    exFormMail.style.display = (key === 'mail') ? '' : 'none';
+  }
+  tabs.forEach(t => {
+    t.addEventListener('click', () => switchExchangeTab(t.dataset.tab));
+  });
+
+  // —— 加入购物车 / 立即换新 ——
+  document.getElementById('addToCartBtn').addEventListener('click', () => {
+    showToast('已加入购物车');
+  });
+  document.getElementById('exchangeNowBtn').addEventListener('click', () => {
+    openCheckout();
+  });
+
+  // —— 添加收款信息 浮窗（单层，表单/确认两个内部视图） ——
+  const alipayMask = document.getElementById('alipayMask');
+  const alipayPanel = document.getElementById('alipayPanel');
+  const alipayClose = document.getElementById('alipayClose');
+  const alipayName = document.getElementById('alipayName');
+  const alipayAccount = document.getElementById('alipayAccount');
+  const alipaySubmit = document.getElementById('alipaySubmit');
+  const apFormView = document.getElementById('apFormView');
+  const apConfirmView = document.getElementById('apConfirmView');
+  const confirmName = document.getElementById('confirmName');
+  const confirmAccount = document.getElementById('confirmAccount');
+  const confirmCancel = document.getElementById('confirmCancel');
+  const confirmOk = document.getElementById('confirmOk');
+  const payWayStatus = document.getElementById('payWayStatus');
+
+  function openAlipay() {
+    alipayPanel.style.display = 'flex';
+    alipayMask.style.display = 'block';
+    apFormView.style.display = 'flex';
+    apConfirmView.style.display = 'none';
+  }
+  function closeAlipay() {
+    alipayPanel.style.display = 'none';
+    alipayMask.style.display = 'none';
+  }
+  document.getElementById('payWayEntry').addEventListener('click', openAlipay);
+  alipayClose.addEventListener('click', closeAlipay);
+  alipayMask.addEventListener('click', closeAlipay);
+  alipaySubmit.addEventListener('click', () => {
+    const n = alipayName.value.trim();
+    const a = alipayAccount.value.trim();
+    if (!n || !a) { showToast('请完整填写姓名与支付宝账号'); return; }
+    confirmName.textContent = n;
+    confirmAccount.textContent = a;
+    apFormView.style.display = 'none';
+    apConfirmView.style.display = 'flex';
+  });
+  confirmCancel.addEventListener('click', () => {
+    apConfirmView.style.display = 'none';
+    apFormView.style.display = 'flex';
+  });
+  confirmOk.addEventListener('click', () => {
+    payWayStatus.textContent = alipayAccount.value.trim();
+    payWayStatus.classList.add('filled');
+    closeAlipay();
+    showToast('收款信息已保存');
+  });
+
+  // —— 结算页 ——
+  const checkoutView = document.getElementById('checkoutView');
+  const ckMask = document.getElementById('ckMask');
+
+  // 回填结算页数据（来自旧品信息选择 / 绑定回收单）
+  function syncCheckout() {
+    const oi = boundRO ? null : getOldInfo();
+    const base = boundRO ? boundRO.old : oi.old;             // 旧机金额
+    const subsidy = boundRO ? boundRO.subsidy : 260;          // 换新补贴
+    const coupon = 260;                      // 优惠券
+    const guobu = 1500;                      // 国补
+    const edu = 300;                         // 教育特惠
+    const youhui = edu + guobu + coupon;     // 教育特惠 + 国家补贴 + 优惠券 合并为「优惠」
+    const product = 15999;                   // 单品价
+    const finalPay = product - youhui;                 // 实付 = 商品金额 - 优惠（优惠券+教育特惠+国补）
+
+    const fmt = n => n.toLocaleString();
+
+    if (boundRO) {
+      document.getElementById('ckTradeValue').textContent = '已绑定回收单 · 绑定后返换新补贴 ¥' + fmt(subsidy) + ' ›';
+      // 浮窗绑定块
+      document.getElementById('ckBindName').textContent = boundRO.name;
+      document.getElementById('ckBindSub').textContent = boundRO.sub;
+      document.getElementById('ckBindOld').textContent = '回收预估 ¥' + fmt(base);
+      document.getElementById('ckBindAmt').textContent = fmt(subsidy);
+      document.getElementById('ckBindNo').textContent = boundRO.id;
+      document.getElementById('ckBindSubsidy').textContent = '¥' + fmt(subsidy) + ' · 绑定后返';
+      document.getElementById('ckPayNote').innerHTML = '绑定后返换新补贴 ¥' + fmt(subsidy);
+      document.getElementById('ckOldName').textContent = boundRO.name;
+      document.getElementById('ckOldSub').textContent = boundRO.sub;
+    } else {
+      document.getElementById('ckTradeValue').textContent = '已选 · 旧机预计返 ¥' + fmt(base) + ' ›';
+      document.getElementById('ckPayNote').innerHTML = '预估旧机返 <span id="ckReturn">￥' + base + '</span>，换新补贴 ￥260';
+      document.getElementById('ckOldName').textContent = oi.name;
+      document.getElementById('ckOldSub').textContent = oi.storage + ' · ' + oi.cond;
+    }
+    document.getElementById('ckOldAmt').textContent = fmt(base);
+
+    // 合计
+    document.getElementById('ckTotalYouhui').textContent = '-¥' + fmt(youhui);
+    document.getElementById('ckPayAmount').textContent = fmt(finalPay);
+    if (!boundRO) document.getElementById('ckReturn').textContent = '￥' + base;
+  }
+
+  function openCheckout() {
+    syncCheckout();
+    checkoutView.classList.add('in');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeCheckout() {
+    checkoutView.classList.remove('in');
+    checkoutView.classList.add('out');
+    setTimeout(() => {
+      checkoutView.classList.remove('out');
+      document.body.style.overflow = '';
+    }, 360);
+  }
+
+  document.getElementById('ckBack').addEventListener('click', () => {
+    closeCheckout();
+    // 绑定流程：结算页直接来自回收单列表，返回时重新打开列表
+    if (boundRO) setTimeout(openRecycle, 360);
+  });
+  document.getElementById('ckClose').addEventListener('click', () => {
+    closeCheckout();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // 以旧换新详情浮层：回填前置选择的回收方式
+  function syncCkWay() {
+    const data = STEP_DATA[currentWay];
+    document.getElementById('ckWayTag').textContent = WAY_NAME[currentWay];
+    document.getElementById('ckWayIc1').innerHTML = data.ic1;
+    document.getElementById('ckWayIc2').innerHTML = data.ic2;
+    document.getElementById('ckWayIc3').innerHTML = IC3;
+    document.getElementById('ckWayLbl1').textContent = data.label1;
+    document.getElementById('ckWayLbl2').textContent = data.label2;
+    document.getElementById('ckWayLbl3').textContent = '确认回收';
+  }
+
+  function openCkSheet() {
+    const isBind = !!boundRO;
+    // 绑定模式：仅显示绑定回收单块；估价模式：显示旧机/回收方式/收款方式块
+    document.getElementById('ckBindBlock').style.display = isBind ? '' : 'none';
+    document.getElementById('ckOldBlock').style.display = isBind ? 'none' : '';
+    document.getElementById('ckWayBlock').style.display = isBind ? 'none' : '';
+    document.getElementById('ckPayBlock').style.display = isBind ? 'none' : '';
+    if (isBind) {
+      ckMask.classList.add('show');
+      return;
+    }
+    syncCkWay();
+    // 回填换新方式表单信息
+    const isHome = currentWay === 'home';
+    const exName = document.getElementById(isHome ? 'exNameHome' : 'exNameMail');
+    const exPhone = document.getElementById(isHome ? 'exPhoneHome' : 'exPhoneMail');
+    const exAddr = document.getElementById(isHome ? 'exAddrHome' : 'exAddrMail');
+    const exTime = document.getElementById(isHome ? 'exTimeHome' : 'exTimeMail');
+    document.getElementById('ckExName').textContent = exName.value.trim() || '—';
+    document.getElementById('ckExPhone').textContent = exPhone.value.trim() || '—';
+    document.getElementById('ckExAddr').textContent = exAddr.textContent.trim() || '—';
+    document.getElementById('ckExTime').textContent = exTime.textContent.trim() || '—';
+    // 回填收款方式
+    const acct = alipayAccount.value.trim();
+    const nm = alipayName.value.trim();
+    document.getElementById('ckPayName').textContent = nm || '—';
+    document.getElementById('ckPayAccount').textContent = acct || '—';
+    ckMask.classList.add('show');
+  }
+  function closeCkSheet() {
+    ckMask.classList.remove('show');
+  }
+  document.getElementById('ckTradeBtn').addEventListener('click', openCkSheet);
+  document.getElementById('ckSheetClose').addEventListener('click', closeCkSheet);
+  document.getElementById('ckLater').addEventListener('click', () => {
+    closeCkSheet();
+    if (boundRO) {
+      showToast('已取消绑定回收单，按实付款结算');
+      document.getElementById('ckTradeValue').textContent = '可绑定回收单返换新补贴 ›';
+    } else {
+      showToast('已移除以旧换新，按原价结算');
+      document.getElementById('ckTradeValue').textContent = '回收后最高返 ¥' + document.getElementById('ckOldAmt').textContent + ' ›';
+    }
+  });
+  document.getElementById('ckJoin').addEventListener('click', () => {
+    closeCkSheet();
+    showToast(boundRO ? '已确认绑定回收单' : '已确认参与以旧换新');
+  });
+  ckMask.addEventListener('click', (e) => {
+    if (e.target === ckMask) closeCkSheet();
+  });
+  document.getElementById('ckWayEdit').addEventListener('click', () => {
+    closeCkSheet();
+    closeCheckout();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // 其他促销行（发票/优惠券/优惠码）
+  document.querySelectorAll('.ck-promo:not(.trade)').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const name = btn.querySelector('.name').textContent;
+      showToast(name + '功能演示');
+    });
+  });
+
+  // 提交订单
+  document.getElementById('ckSubmitBtn').addEventListener('click', () => {
+    showToast('订单已提交 · 等待支付');
+    try {
+      const products = [{name:'联想 ThinkBook 16p 2026 / Ultra 7 251HX / 32G / 1T / RTX5060', spec:'全国联保 京东速配', price:15999, qty:1}];
+      const olds = [];
+      if (boundRO) olds.push({name: boundRO.name, est: boundRO.old, subsidy: boundRO.subsidy});
+      const goods = 15999;
+      const pay = parseFloat((document.getElementById('ckPayAmount').textContent||'').replace(/[^\d.]/g,'')) || 0;
+      const discount = Math.max(0, goods - pay);
+      localStorage.setItem('tradein_order', JSON.stringify({flow:'bind', products, olds, money:{goods, freight:0, discount, pay}}));
+    } catch(e){ console.warn('order sync failed', e); }
+    setTimeout(() => { window.location.href = '以旧换新订单详情-WAP.html'; }, 700);
+  });
+
+  // —— Toast ——
+  const toast = document.getElementById('toast');
+  let toastTimer;
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 1800);
+  }
+
+  // —— 初始化 ——
+  syncOrderView();
+
+  // —— 键盘 ESC 关闭 ——
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      if (ckMask.classList.contains('show')) {
+        closeCkSheet();
+      } else if (checkoutView.classList.contains('in')) {
+        closeCheckout();
+      } else if (orderView.classList.contains('in')) {
+        closeOrder();
+      }
+    }
+  });
+
+})();
+</script>
+</body>
+</html>

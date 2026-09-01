@@ -1,0 +1,3 @@
+# EdgeOne Makers 部署产物：含项目元信息与资源副本，不纳入版本库
+.edgeone/
+.env
