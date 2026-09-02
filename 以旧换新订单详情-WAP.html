@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>订单详情 - 旧机回收</title>
+  <style>
+    :root{--red:#ff3b45;--orange:#ff7748;--ink:#222;--muted:#8d8d8d;--line:#ededed;--bg:#f5f5f5;--card:#fff;--soft:#fff0f1}
+    *{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:"PingFang SC","Microsoft YaHei",Arial,sans-serif;color:var(--ink);background:#e7e7e7}button{font:inherit;cursor:pointer}
+    .phone{width:min(430px,100%);min-height:100vh;margin:0 auto;background:var(--bg);position:relative;padding-bottom:82px;box-shadow:0 0 26px rgba(0,0,0,.1)}
+    .hero{height:318px;color:#fff;background:linear-gradient(140deg,#ff8247 0%,#ff5942 52%,#ff303a 100%);position:relative;overflow:hidden}
+    .hero:before,.hero:after{content:"";position:absolute;border-radius:50%;background:rgba(255,255,255,.06)}.hero:before{width:240px;height:240px;right:-105px;top:80px}.hero:after{width:300px;height:300px;left:-170px;bottom:-205px}
+    .status{height:34px;padding:10px 21px 0;display:flex;justify-content:space-between;font-size:12px;font-weight:700;position:relative;z-index:1}.signals{letter-spacing:1px}
+    .nav{height:50px;display:grid;grid-template-columns:44px 1fr 44px;align-items:center;text-align:center;position:relative;z-index:1}.nav h1{font-size:19px;margin:0;font-weight:600}.back{border:0;background:none;color:#fff;font-size:31px;line-height:1}
+    .trade-done{position:absolute;left:29px;top:170px;display:flex;align-items:center;gap:10px;font-size:24px;font-weight:500;z-index:1}.check{width:25px;height:25px;border:2px solid #fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px}
+    .doc-art{position:absolute;right:28px;top:142px;width:78px;height:78px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;z-index:1}.doc-art svg{width:56px;height:56px;filter:drop-shadow(0 5px 8px rgba(183,25,40,.2))}
+    .content{position:relative;margin-top:-61px;padding:0 14px;z-index:4}.card{background:var(--card);border-radius:15px;margin-bottom:12px;overflow:hidden}.ship-card{padding:17px 15px}.ship-head{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:700}.truck{width:22px;height:22px}.chev{margin-left:auto;color:#777;font-size:24px;font-weight:300}.ship-note{margin:9px 0 12px 32px;color:#999;font-size:13px;line-height:1.5}.ship-time{margin-left:32px;color:#999;font-size:13px;padding-bottom:15px;border-bottom:1px solid var(--line)}.address{display:grid;grid-template-columns:24px 1fr;gap:10px;padding-top:17px}.pin{width:20px;height:20px;stroke:#777;fill:none}.receiver{font-weight:700;font-size:15px}.receiver-address{color:#999;font-size:13px;margin-top:9px;line-height:1.5}
+    .product-wrap{padding:15px 14px 0}.product{display:grid;grid-template-columns:88px 1fr;gap:12px;padding-bottom:15px}.product-image{width:88px;height:88px;border:1px solid #e8e8e8;border-radius:7px;display:flex;align-items:center;justify-content:center;background:#fff}.product-image svg{width:76px;height:58px}.product-name{font-size:14px;line-height:1.45;font-weight:700}.product-qty{color:#999;font-size:12px;margin-top:3px}.product-price{font-size:20px;font-weight:800;margin-top:9px}.tag{display:inline-block;color:#ff6873;background:#fff0f2;border-radius:10px;padding:3px 7px;font-size:10px;margin-top:7px}
+    .service-list{border-top:1px solid var(--line)}.service-row{width:100%;min-height:52px;border:0;border-bottom:1px solid var(--line);background:#fff;display:flex;align-items:center;padding:0 0;text-align:left}.service-row:last-child{border-bottom:0}.service-title{font-size:14px;color:#555}.service-sub{color:#999;font-size:12px;margin-left:10px}.service-action{margin-left:auto;color:#ff5d64;font-size:14px;display:flex;align-items:center}.service-action .chev{color:#ff777d;font-size:21px;margin-left:4px}
+    .recycle-row{min-height:67px;padding:9px 0}.recycle-icon{width:28px;height:28px;border-radius:6px;background:var(--soft);display:flex;align-items:center;justify-content:center;margin-right:10px}.recycle-icon svg{width:19px;height:19px;stroke:var(--red);fill:none}.recycle-copy strong{font-size:15px;color:#292929}.recycle-copy span{display:block;color:#999;font-size:12px;margin-top:6px}.recycle-row .chev{margin-left:auto;color:#777}
+    .customer{height:49px;display:flex;align-items:center;justify-content:center;gap:9px;color:#666;font-size:14px}.headset{width:23px;height:23px;stroke:#666;fill:none}
+    .info-card{padding:18px 15px}.info-line{font-size:14px;line-height:1.75}.info-line+.info-line{margin-top:5px}.label{color:#999;margin-right:8px}.copy-pill{border:0;background:#f3f3f3;border-radius:12px;font-size:11px;padding:4px 10px;margin-left:8px;color:#555}.divider{height:1px;background:var(--line);margin:14px 0}
+    .money-card{padding:16px 15px}.money-line{display:flex;justify-content:space-between;font-size:14px;margin:11px 0}.money-line.total{justify-content:flex-end;align-items:baseline;margin-top:20px;font-weight:700}.money-line.total b{font-size:20px;color:var(--red);margin-left:10px}
+    .bottom-actions{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(430px,100%);height:68px;background:#fff;border-top:1px solid #e7e7e7;display:grid;grid-template-columns:repeat(4,1fr);gap:7px;padding:10px 14px calc(10px + env(safe-area-inset-bottom));z-index:20}.bottom-actions button{height:38px;border:1px solid #aaa;border-radius:20px;background:#fff;color:#555;font-size:13px}.bottom-actions .accent{border-color:#ff6b70;color:#ff4d55}
+    .mask{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;display:none;align-items:flex-end;justify-content:center}.mask.show{display:flex}.sheet{width:min(430px,100%);max-height:82vh;background:#fff;border-radius:18px 18px 0 0;overflow:auto;animation:up .22s ease-out}@keyframes up{from{transform:translateY(30px);opacity:.5}to{transform:translateY(0);opacity:1}}.handle{width:38px;height:4px;background:#ddd;border-radius:4px;margin:9px auto 1px}.sheet-head{height:54px;display:flex;align-items:center;padding:0 17px;border-bottom:1px solid var(--line)}.sheet-head h2{font-size:17px;margin:0}.close{margin-left:auto;width:32px;height:32px;border:0;border-radius:50%;background:#f5f5f5;color:#777;font-size:21px}.sheet-body{padding:14px 16px 22px}.recycle-summary{border:1px solid #ffd4d7;background:#fff6f6;border-radius:10px;padding:15px}.recycle-summary strong{font-size:16px}.recycle-summary p{font-size:12px;color:#777;margin:7px 0 0;line-height:1.5}.device-list{margin-top:14px;border:1px solid #ececec;border-radius:10px;overflow:hidden}.device{display:grid;grid-template-columns:42px 1fr auto;align-items:center;gap:10px;padding:13px;border-bottom:1px solid var(--line)}.device:last-child{border-bottom:0}.device-ic{width:36px;height:36px;background:#f5f6f8;border-radius:8px;display:flex;align-items:center;justify-content:center}.device-ic svg{width:23px;height:23px;stroke:#666;fill:none}.device b{font-size:13px}.device span{display:block;color:#999;font-size:11px;margin-top:4px}.device em{font-style:normal;color:#ff5962;font-size:12px}.sheet-note{color:#999;font-size:11px;line-height:1.55;margin:13px 2px 0}.sheet-action{position:sticky;bottom:0;background:#fff;border-top:1px solid var(--line);padding:12px 16px calc(13px + env(safe-area-inset-bottom))}.sheet-action button{width:100%;height:44px;border:0;border-radius:22px;background:linear-gradient(90deg,#ff664f,#ff3544);color:#fff;font-weight:700}
+    @media(min-width:700px){body{padding:22px 0}.phone{border-radius:18px;overflow:hidden}.bottom-actions{bottom:22px;border-radius:0 0 18px 18px}.sheet{margin-bottom:22px;border-radius:18px}}@media(prefers-reduced-motion:reduce){.sheet{animation:none}}
+  </style>
+</head>
+<body>
+  <main class="phone">
+    <header class="hero"><div class="status"><span>04:54</span><span class="signals">● WiFi 5G ▮▮▮ ▰</span></div><div class="nav"><button class="back" aria-label="返回">‹</button><h1>订单详情</h1><span></span></div><div class="trade-done"><span class="check">✓</span>交易完成</div><div class="doc-art"><svg viewBox="0 0 64 64"><rect x="18" y="8" width="34" height="45" rx="5" fill="#fff1ee"/><rect x="11" y="16" width="35" height="42" rx="5" fill="#fff"/><path d="m19 37 7 7 13-15" stroke="#ff766c" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M26 18h13M29 24h10" stroke="#ffc5bf" stroke-width="3"/></svg></div></header>
+    <div class="content">
+      <section class="card ship-card"><div class="ship-head"><svg class="truck" viewBox="0 0 32 32"><path d="M3 8h17v14H3zM20 13h5l4 5v4h-9z" fill="none" stroke="#666"/><circle cx="9" cy="24" r="3" fill="none" stroke="#666"/><circle cx="24" cy="24" r="3" fill="none" stroke="#666"/></svg><span>已签收</span><span class="chev">›</span></div><div class="ship-note">在官网“运单资料签收图”，可查看签收人信息</div><div class="ship-time">2024-06-07 09:37:00</div><div class="address"><svg class="pin" viewBox="0 0 28 28"><path d="M14 25S5 18 5 10a9 9 0 1 1 18 0c0 8-9 15-9 15z"/><circle cx="14" cy="10" r="3"/><path d="M5 25h18"/></svg><div><div class="receiver">WXT 18101024147</div><div class="receiver-address">天津市天津市东丽区天津空港经济区商务园东区 E11-5F</div></div></div></section>
+      <section class="card product-wrap">
+        <div id="productList">
+          <div class="product"><div class="product-image"><svg viewBox="0 0 120 82"><ellipse cx="60" cy="62" rx="46" ry="12" fill="#ddd" opacity=".45"/><path d="M28 54c0-27 17-42 35-42 19 0 35 15 35 42 0 14-14 21-35 21-21 0-35-7-35-21z" fill="#222831"/><path d="M63 14v25" stroke="#555f69" stroke-width="2"/><path d="M55 23c5-5 12-5 17 0" stroke="#e33" stroke-width="2"/><text x="50" y="56" fill="#eee" font-size="7">Lenovo</text></svg></div><div><div class="product-name">【企业购】thinkplus M80 无线鼠标</div><div class="product-qty">×1</div><div class="product-price">¥ 37</div><span class="tag">支持14天无忧退换</span></div></div>
+        </div>
+        <div class="service-list"><div class="service-row" id="warrantyUpgrade"><span class="service-title">保障升级</span><span class="service-sub">商品全面无忧保障</span><span class="service-action">立即购买 <span class="chev">›</span></span></div><button class="service-row recycle-row" id="oldDeviceRecycle" type="button" onclick="openRecycle()"><span class="recycle-icon"><svg viewBox="0 0 24 24"><path d="M8 5H4v4M4.5 8.5A8 8 0 1 1 6 17"/><path d="M16 19h4v-4M19.5 15.5A8 8 0 0 1 18 7"/></svg></span><span class="recycle-copy"><strong id="recycleCount">3件旧机回收</strong><span>了解每件旧机回收情况可点击查看</span></span><span class="chev">›</span></button><div class="customer" id="customerService"><svg class="headset" viewBox="0 0 28 28"><path d="M4 15a10 10 0 0 1 20 0v7h-4v-8a6 6 0 0 0-12 0v8H4z"/><path d="M8 23c2 3 9 4 12 0"/></svg>联系客服</div></div>
+      </section>
+      <section class="card info-card"><div class="info-line"><span class="label">发票类型：</span>电子普通发票</div><div class="info-line"><span class="label">发票抬头：</span>个人</div></section>
+      <section class="card info-card"><div class="info-line"><span class="label">订单编号：</span><span id="orderNo">268017444</span> <button class="copy-pill">复制</button></div><div class="info-line"><span class="label">下单时间：</span><span id="orderTime">2024-05-29 11:20:00</span></div><div class="divider"></div><div class="info-line"><span class="label">支付方式：</span>联想官方微信APP支付</div><div class="info-line"><span class="label">支付时间：</span><span id="payTime">2024-05-29 11:20:09</span></div><div class="divider"></div><div class="info-line"><span class="label">配送方式：</span>快递配送</div></section>
+      <section class="card money-card"><div class="money-line"><span>商品金额</span><b id="mGoods">¥ 37.00</b></div><div class="money-line"><span>运费</span><span id="mFreight">+ ¥0.00</span></div><div class="money-line"><span>优惠</span><span id="mDiscount">- ¥0.00</span></div><div class="money-line total"><span>实付款：</span><b id="mPay">¥ 37.00</b></div></section>
+    </div>
+  </main>
+  <footer class="bottom-actions"><button>删除订单</button><button>申请售后</button><button>再次购买</button><button class="accent">发票服务</button></footer>
+  <div class="mask" id="recycleMask" role="dialog" aria-modal="true" aria-labelledby="recycleTitle" onclick="if(event.target===this)closeRecycle()"><section class="sheet"><div class="handle"></div><header class="sheet-head"><h2 id="recycleTitle">旧机回收详情</h2><button class="close" aria-label="关闭" onclick="closeRecycle()">×</button></header><div class="sheet-body"><div class="recycle-summary"><strong id="recycleSummaryTitle">本订单共 3 件旧机回收</strong><p>回收进度以质检结果为准，可点击对应设备继续查看。</p></div><div class="device-list" id="deviceList"><div class="device"><span class="device-ic"><svg viewBox="0 0 28 28"><rect x="3" y="5" width="22" height="15" rx="2"/><path d="M9 24h10M14 20v4"/></svg></span><div><b>ThinkPad X1 Carbon</b><span>回收单号：HS20240529001</span></div><em>已完成</em></div><div class="device"><span class="device-ic"><svg viewBox="0 0 28 28"><rect x="7" y="2" width="14" height="24" rx="3"/><path d="M12 22h4"/></svg></span><div><b>联想拯救者 Y70</b><span>回收单号：HS20240529002</span></div><em>质检中</em></div><div class="device"><span class="device-ic"><svg viewBox="0 0 28 28"><rect x="5" y="3" width="18" height="22" rx="2"/><path d="M11 21h6"/></svg></span><div><b>小新 Pad Pro</b><span>回收单号：HS20240529003</span></div><em>待寄出</em></div></div><p class="sheet-note">如回收设备信息或状态有疑问，请联系在线客服处理。</p></div><div class="sheet-action"><button onclick="closeRecycle()">我知道了</button></div></section></div>
+  <script>
+    function openRecycle(){document.getElementById('recycleMask').classList.add('show');document.body.style.overflow='hidden';}
+    function closeRecycle(){document.getElementById('recycleMask').classList.remove('show');document.body.style.overflow='';}
+    document.addEventListener('keydown',event=>{if(event.key==='Escape'&&document.getElementById('recycleMask').classList.contains('show'))closeRecycle();});
+
+    // —— 同步结算页数据（来自三个下单流程的提交）——
+    (function(){
+      try{
+        const raw = localStorage.getItem('tradein_order');
+        if(!raw) return;
+        const o = JSON.parse(raw);
+        const fmtN = n => '¥ ' + Number(n||0).toLocaleString('zh-CN',{minimumFractionDigits:2,maximumFractionDigits:2});
+        const laptop = '<svg viewBox="0 0 120 82"><ellipse cx="60" cy="62" rx="46" ry="12" fill="#ddd" opacity=".45"/><path d="M28 54c0-27 17-42 35-42 19 0 35 15 35 42 0 14-14 21-35 21-21 0-35-7-35-21z" fill="#222831"/><path d="M63 14v25" stroke="#555f69" stroke-width="2"/><path d="M55 23c5-5 12-5 17 0" stroke="#e33" stroke-width="2"/><text x="50" y="56" fill="#eee" font-size="7">Lenovo</text></svg>';
+        if(o.products && o.products.length){
+          const list = document.getElementById('productList');
+          list.innerHTML = o.products.map(p => `
+            <div class="product">
+              <div class="product-image">${laptop}</div>
+              <div>
+                <div class="product-name">${p.name}</div>
+                <div class="product-qty">×${p.qty}</div>
+                <div class="product-price">¥ ${Number(p.price).toLocaleString()}</div>
+                <span class="tag">支持14天无忧退换</span>
+              </div>
+            </div>`).join('');
+        }
+        const olds = o.olds || [];
+        const rc = document.getElementById('recycleCount'); if(rc) rc.textContent = olds.length + '件旧机回收';
+        const rs = document.getElementById('recycleSummaryTitle'); if(rs) rs.textContent = '本订单共 ' + olds.length + ' 件旧机回收';
+        const dl = document.getElementById('deviceList');
+        if(dl){
+          if(olds.length){
+            dl.innerHTML = olds.map(x => `
+              <div class="device">
+                <span class="device-ic"><svg viewBox="0 0 28 28"><rect x="3" y="5" width="22" height="15" rx="2"/><path d="M9 24h10M14 20v4"/></svg></span>
+                <div><b>${x.name}</b><span>预估回收 ¥${Number(x.est).toLocaleString()}</span></div>
+                <em>换新补贴 ¥${Number(x.subsidy).toLocaleString()}</em>
+              </div>`).join('');
+          } else {
+            dl.innerHTML = '<div class="device"><span class="device-ic"><svg viewBox="0 0 28 28"><rect x="3" y="5" width="22" height="15" rx="2"/><path d="M9 24h10M14 20v4"/></svg></span><div><b>无旧机回收</b><span>本单未参与以旧换新</span></div></div>';
+          }
+        }
+        if(o.money){
+          if(document.getElementById('mGoods')) document.getElementById('mGoods').textContent = fmtN(o.money.goods);
+          if(document.getElementById('mFreight')) document.getElementById('mFreight').textContent = '+ ' + fmtN(o.money.freight||0);
+          if(document.getElementById('mDiscount')) document.getElementById('mDiscount').textContent = '- ' + fmtN(o.money.discount||0);
+          if(document.getElementById('mPay')) document.getElementById('mPay').textContent = fmtN(o.money.pay);
+        }
+        const now = new Date(); const pad = n => String(n).padStart(2,'0');
+        const ts = now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate())+' '+pad(now.getHours())+':'+pad(now.getMinutes())+':'+pad(now.getSeconds());
+        if(document.getElementById('orderTime')) document.getElementById('orderTime').textContent = ts;
+        if(document.getElementById('payTime')) document.getElementById('payTime').textContent = ts;
+        if(document.getElementById('orderNo')) document.getElementById('orderNo').textContent = Math.floor(100000000+Math.random()*900000000);
+      }catch(e){ console.warn('order data parse failed', e); }
+    })();
+  </script>
+</body>
+</html>
