@@ -874,6 +874,84 @@ body {
   transform: translateY(100%);
 }
 
+/* —— 机况评估页（condView，由「添加旧机」唤出） —— */
+.cond-progress { padding: 10px 16px; }
+.cond-progress-bar {
+  position: relative; height: 10px; background: #eee; border-radius: 5px; overflow: hidden;
+}
+.cond-progress-fill {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, #ffb84d 0%, #ff7800 100%);
+  border-radius: 5px; transition: width .25s ease;
+}
+.cond-progress-count {
+  position: absolute; top: 50%; right: 8px; transform: translateY(-50%);
+  font-size: 11px; color: #999; font-weight: 600; letter-spacing: 0.3px; transition: color .2s;
+}
+.cond-progress-count.on { color: #fff; }
+
+.cond-tip {
+  margin: 0 12px 12px; padding: 8px 12px;
+  background: linear-gradient(90deg, #fff3ec 0%, #fff8f0 100%);
+  border-radius: 8px; display: flex; align-items: center; gap: 8px; font-size: 12px;
+}
+.cond-tip-tag {
+  flex-shrink: 0; background: #ff7800; color: #fff;
+  padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 500;
+}
+.cond-tip-text { color: #555; flex: 1; }
+
+.cond-device {
+  padding: 4px 16px 14px;
+  display: flex; align-items: baseline; justify-content: space-between; gap: 8px;
+  font-size: 17px; font-weight: 700; color: #1a1a1a;
+}
+.cond-device-est { font-size: 15px; font-weight: 700; color: #e1251b; white-space: nowrap; }
+
+.cond-rows {
+  margin: 0 12px; background: #fff; border-radius: 10px; overflow: hidden;
+}
+.cond-row {
+  display: flex; align-items: center; padding: 14px;
+  border-bottom: 1px solid #f0f0f0; cursor: pointer; min-height: 50px;
+}
+.cond-row:last-child { border-bottom: none; }
+.cond-row-l { flex: 0 0 auto; font-size: 14px; color: #1a1a1a; font-weight: 500; }
+.cond-row-r {
+  flex: 1; min-width: 0; display: flex; align-items: center; justify-content: flex-end;
+  gap: 6px; margin-left: 12px;
+}
+.cond-row-val {
+  font-size: 13px; color: #ccc; text-align: right;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.cond-row.filled .cond-row-val { color: #1a1a1a; }
+.cond-row-edit { font-size: 14px; color: #ccc; }
+.cond-row.open .cond-row-edit { color: #ff7800; }
+
+.cond-picker { margin: 8px 12px 0; display: flex; flex-direction: column; gap: 6px; }
+.cond-option {
+  background: #fff; border: 1px solid #f0f0f0; border-radius: 8px;
+  padding: 14px 16px; text-align: center; font-size: 14px; color: #1a1a1a;
+  cursor: pointer; transition: border-color .15s, color .15s, background .15s;
+}
+.cond-option:active { background: #f7f7f7; }
+.cond-option.on { border-color: #ff7800; color: #ff7800; font-weight: 600; }
+
+.cond-bottom {
+  position: absolute; bottom: 0; left: 0; right: 0; max-width: 750px; margin: 0 auto;
+  padding: 12px 24px calc(12px + env(safe-area-inset-bottom));
+  display: flex; justify-content: center; background: #f5f5f7; z-index: 10;
+}
+.cond-pill {
+  width: 280px; height: 48px;
+  background: linear-gradient(90deg, #ffb84d 0%, #ff7800 100%);
+  color: #fff; border: none; border-radius: 24px;
+  font-size: 16px; font-weight: 600;
+  box-shadow: 0 6px 16px rgba(255, 120, 0, 0.25); cursor: pointer; transition: opacity .15s;
+}
+.cond-pill:active { opacity: 0.85; }
+
 /* 可滚动内容区（留出底部固定栏高度） */
 .order-scroll {
   position: absolute;
@@ -912,7 +990,7 @@ body {
 }
 .order-nav .back:active,
 .order-nav .close-btn:active { background: #f5f5f7; }
-.order-nav .title { font-size: 16px; font-weight: 600; color: #1a1a1a; }
+.order-nav .title { font-size: 16px; font-weight: 600; color: #1a1a1a; flex: 1; text-align: center; }
 .order-nav .spacer { width: 30px; }
 
 /* 步骤进度 */
@@ -993,6 +1071,13 @@ body {
   border-radius: 8px;
   font-weight: 500;
 }
+.card-head .edit {
+  font-size: 13px;
+  color: #4a4a4a;
+  cursor: pointer;
+  user-select: none;
+}
+.card-head .edit:active { opacity: 0.6; }
 
 /* 新品卡 */
 .new-product {
@@ -1545,6 +1630,7 @@ body {
   overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
 }
 .ro-card .ro-sub { font-size: 11px; color: #999; margin-top: 3px; }
+.ro-card .ro-old-amt { color: #e1251b; font-weight: 500; }
 .ro-card .ro-amt { text-align: right; flex-shrink: 0; }
 .ro-card .ro-amt .p { font-size: 16px; font-weight: 700; color: #e1251b; }
 .ro-card .ro-amt .hint { font-size: 10px; color: #999; }
@@ -1842,6 +1928,7 @@ body {
 .ck-old-card .info .nm { font-size: 13px; color: #1a1a1a; margin-bottom: 3px; font-weight: 600; }
 .ck-old-card .info .sub { font-size: 11px; color: #999; }
 .ck-old-card .p { font-size: 16px; font-weight: 700; color: #e1251b; }
+.ck-old-card .ck-bind-old-amt { color: #e1251b; font-weight: 500; }
 
 .ck-fine { font-size: 10px; color: #999; line-height: 1.55; margin: 12px 0 0; }
 
@@ -2101,8 +2188,7 @@ body {
           <span class="ro-status">待收货</span>
         </div>
         <div class="ro-name">拯救者 Y9000P 2023款 i9 RTX4060</div>
-        <div class="ro-sub">16G+1T · 95新 · 上门回收</div>
-        <div class="ro-sub">回收预估 ¥3,940</div>
+        <div class="ro-sub">回收预估 <span class="ro-old-amt">¥3,940</span></div>
       </div>
       <div class="ro-amt">
         <div class="p">¥260</div>
@@ -2117,8 +2203,7 @@ body {
           <span class="ro-status">待收货</span>
         </div>
         <div class="ro-name">ThinkBook 14 2022款 i5</div>
-        <div class="ro-sub">16G+512G · 90新 · 邮寄回收</div>
-        <div class="ro-sub">回收预估 ¥1,600</div>
+        <div class="ro-sub">回收预估 <span class="ro-old-amt">¥1,600</span></div>
       </div>
       <div class="ro-amt">
         <div class="p">¥260</div>
@@ -2130,7 +2215,7 @@ body {
   <!-- 没有回收单 → 去估价（原流程入口） -->
   <div class="ro-new" id="roNew">
     <div class="t">没有可绑定的回收单？</div>
-    <div class="go">立即估价换新 ›</div>
+    <div class="go">添加旧机 ›</div>
   </div>
 
   </div><!-- /order-scroll -->
@@ -2139,6 +2224,23 @@ body {
   <div class="order-action ro-action">
     <div class="ro-total">绑定后返换新补贴 <b id="roTotal">¥260</b><small>旧机回收成功后返</small></div>
     <button class="buy-btn" id="bindBuyBtn">绑定回收单并购买</button>
+  </div>
+</div>
+
+<!-- ============== 机况评估整页（order-view 滑入，由「添加旧机」唤出） ============== -->
+<div class="order-view" id="condView">
+  <div class="order-nav">
+    <div class="back" id="condBack">&#8249;</div>
+    <div class="title">机况评估</div>
+    <div class="spacer"></div>
+  </div>
+
+  <div class="order-scroll">
+    <div id="condBody"><!-- JS 渲染 --></div>
+  </div>
+
+  <div class="cond-bottom">
+    <button class="cond-pill" id="condSubmit">获取估价</button>
   </div>
 </div>
 
@@ -2232,6 +2334,7 @@ body {
   <div class="order-card" id="oldCard" style="margin-top:8px;">
     <div class="card-head">
       <div class="title">旧品信息</div>
+      <div class="edit" id="editOldCond">修改机况 ›</div>
     </div>
 
     <div class="old-item" style="margin-top:4px;">
@@ -2536,8 +2639,7 @@ body {
         <div class="thumb">📱</div>
         <div class="info">
           <div class="nm" id="ckBindName">拯救者 Y9000P 2023款 i9 RTX4060</div>
-          <div class="sub" id="ckBindSub">16G+1T · 95新</div>
-          <div class="sub" id="ckBindOld">回收预估 ¥3,940</div>
+          <div class="sub">回收预估 <span id="ckBindOld" class="ck-bind-old-amt">¥3,940</span></div>
         </div>
         <div class="p">¥<span id="ckBindAmt">260</span></div>
       </div>
@@ -2559,7 +2661,6 @@ body {
           <span class="ck-ex-val">旧机回收成功后返</span>
         </div>
       </div>
-      <p class="ck-fine">换新补贴于旧机回收成功后返还；若回收单取消或质检不通过，换新补贴随之取消，新品订单按实付款继续履约。</p>
     </div>
     <div class="ck-sheet-block" id="ckOldBlock">
       <h3>已选回收旧机</h3>
@@ -2662,6 +2763,141 @@ body {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 
+  // —— 机况评估页（condView，由「添加旧机」唤出；4 题评估 + 折扣系数估价）——
+  const condView = document.getElementById('condView');
+  const condBack = document.getElementById('condBack');
+  const condSubmit = document.getElementById('condSubmit');
+  const COND_BASE = 3750;
+  const condData = {
+    screen:   { label: '屏幕显示', vals: ['完美无划痕', '轻微划痕', '明显划痕/碎裂'], fac: [1.00, 0.85, 0.55] },
+    body:     { label: '机身外观', vals: ['外观完好', '轻微磨损/掉漆', '明显磕碰/变形'], fac: [1.00, 0.88, 0.60] },
+    battery:  { label: '电池健康', vals: ['90%以上 健康', '80%-90% 良好', '80%以下 一般'], fac: [1.00, 0.92, 0.75] },
+    function: { label: '功能情况', vals: ['全部正常', '部分异常（面容/NFC/充电等）', '严重故障（不开机/黑屏）'], fac: [1.00, 0.80, 0.40] },
+  };
+  const condOrder = ['screen', 'body', 'battery', 'function'];
+  const condPick = { screen: -1, body: -1, battery: -1, function: -1 };
+  const condBody = document.getElementById('condBody');
+
+  function fmtCond(v) { return Number(v).toLocaleString('en-US'); }
+
+  function calcCondQuote() {
+    let q = COND_BASE;
+    for (const k of condOrder) q *= condData[k].fac[Math.max(0, condPick[k])];
+    return Math.round(q / 10) * 10;
+  }
+
+  function renderCond() {
+    const devName = (typeof getOldInfo === 'function') ? getOldInfo().name : 'iPhone 14 Pro';
+    condBody.innerHTML = `
+      <div class="cond-progress">
+        <div class="cond-progress-bar"><div class="cond-progress-fill" id="condProgressFill"></div></div>
+        <div class="cond-progress-count" id="condProgressCount">0/${condOrder.length}</div>
+      </div>
+      <div class="cond-tip">
+        <span class="cond-tip-tag">小贴士</span>
+        <span class="cond-tip-text">请按实际情况填写，信息越准确回收价越精准</span>
+      </div>
+      <div class="cond-device">
+        <span>${devName}</span>
+        <span class="cond-device-est" id="condDeviceEst">当前预估 ¥${fmtCond(calcCondQuote())}</span>
+      </div>
+      <div class="cond-rows" id="condRows">
+        ${condOrder.map((k, i) => `
+          <div class="cond-row" data-key="${k}" ${i === 0 ? '' : 'hidden'}>
+            <div class="cond-row-l">${condData[k].label}</div>
+            <div class="cond-row-r"><span class="cond-row-val"></span><span class="cond-row-edit">✎</span></div>
+          </div>`).join('')}
+      </div>
+      <div class="cond-picker" id="condPicker"></div>
+      <div style="height:24px;"></div>`;
+
+    condOrder.forEach(k => {
+      if (condPick[k] >= 0) {
+        const row = condBody.querySelector('.cond-row[data-key="' + k + '"]');
+        row.querySelector('.cond-row-val').textContent = condData[k].vals[condPick[k]];
+        row.classList.add('filled');
+        row.hidden = false;
+      }
+    });
+    updateCondProgress();
+
+    const firstUn = condOrder.find(k => condPick[k] < 0) || condOrder[0];
+    renderCondPicker(firstUn);
+  }
+
+  function updateCondProgress() {
+    const filled = condOrder.filter(k => condPick[k] >= 0).length;
+    const total = condOrder.length;
+    const fill = condBody.querySelector('#condProgressFill');
+    const count = condBody.querySelector('#condProgressCount');
+    if (fill) fill.style.width = ((filled / total) * 100).toFixed(1) + '%';
+    if (count) { count.textContent = filled + '/' + total; count.classList.toggle('on', filled > 0); }
+    const est = condBody.querySelector('#condDeviceEst');
+    if (est) est.textContent = '当前预估 ¥' + fmtCond(calcCondQuote());
+  }
+
+  function renderCondPicker(key) {
+    const it = condData[key];
+    condBody.querySelectorAll('.cond-row').forEach(rr => rr.classList.remove('open'));
+    const row = condBody.querySelector('.cond-row[data-key="' + key + '"]');
+    if (!row) return;
+    row.classList.add('open');
+    row.hidden = false;
+
+    const picker = condBody.querySelector('#condPicker');
+    picker.innerHTML = it.vals.map((v, i) => {
+      const on = condPick[key] === i;
+      return `<div class="cond-option ${on ? 'on' : ''}" data-i="${i}">${v}</div>`;
+    }).join('');
+
+    picker.querySelectorAll('.cond-option').forEach(card => {
+      card.addEventListener('click', () => {
+        const i = parseInt(card.dataset.i, 10);
+        condPick[key] = i;
+        row.querySelector('.cond-row-val').textContent = it.vals[i];
+        row.classList.add('filled');
+        row.classList.remove('open');
+        picker.innerHTML = '';
+        updateCondProgress();
+        const next = condOrder.find(k => condPick[k] < 0);
+        if (next) renderCondPicker(next);
+      });
+    });
+    setTimeout(() => picker.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+  }
+
+  condBody.addEventListener('click', (e) => {
+    const row = e.target.closest('.cond-row');
+    if (!row || row.hidden) return;
+    renderCondPicker(row.dataset.key);
+  });
+
+  function openCondPage() {
+    condView.classList.add('in');
+    document.body.style.overflow = 'hidden';
+    const ab = document.querySelector('.action-bar');
+    if (ab) ab.style.display = 'none';
+    for (const k of condOrder) condPick[k] = -1;
+    renderCond();
+    window.scrollTo({ top: 0 });
+  }
+  function closeCondPage() {
+    condView.classList.remove('in');
+    condView.classList.add('out');
+    setTimeout(() => { condView.classList.remove('out'); }, 360);
+    const ab = document.querySelector('.action-bar');
+    if (ab) ab.style.display = '';
+    document.body.style.overflow = '';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  condBack.addEventListener('click', closeCondPage);
+  window.openCondPage = openCondPage;
+
+  condSubmit.addEventListener('click', () => {
+    closeCondPage();
+    setTimeout(openOrder, 280);
+  });
+
   // 选择回收单
   const roCards = document.querySelectorAll('#recycleView .ro-card');
   roCards.forEach(card => {
@@ -2684,7 +2920,7 @@ body {
   document.getElementById('roNew').addEventListener('click', () => {
     boundRO = null;
     closeRecycle();
-    setTimeout(openOrder, 280);
+    setTimeout(openCondPage, 280);
   });
 
   // 绑定回收单并购买 → 直接进入结算页（绑定模式，跳过下单页）
@@ -2784,6 +3020,12 @@ body {
   orderClose.addEventListener('click', () => {
     closeOrder();
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // 旧品信息卡右上"修改机况" → 回到机况评估页（保留已选项）
+  document.getElementById('editOldCond').addEventListener('click', () => {
+    closeOrder();
+    setTimeout(openCondPage, 280);
   });
 
   // 换新方式：tab 切换 + 步骤时间线 + 表单
@@ -2911,8 +3153,7 @@ body {
       document.getElementById('ckTradeValue').textContent = '已绑定回收单 · 绑定后返换新补贴 ¥' + fmt(subsidy) + ' ›';
       // 浮窗绑定块
       document.getElementById('ckBindName').textContent = boundRO.name;
-      document.getElementById('ckBindSub').textContent = boundRO.sub;
-      document.getElementById('ckBindOld').textContent = '回收预估 ¥' + fmt(base);
+      document.getElementById('ckBindOld').textContent = '¥' + fmt(base);
       document.getElementById('ckBindAmt').textContent = fmt(subsidy);
       document.getElementById('ckBindNo').textContent = boundRO.id;
       document.getElementById('ckBindSubsidy').textContent = '¥' + fmt(subsidy) + ' · 绑定后返';
