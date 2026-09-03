@@ -1261,7 +1261,7 @@ body {
 .old-item .price-side .p { font-size: 16px; font-weight: 700; color: #e1251b; }
 .old-item .price-side .hint { font-size: 10px; color: #999; }
 
-/* 换新方式 */
+/* 回收方式 */
 .pay-row {
   display: flex; align-items: center; gap: 10px;
   padding-bottom: 12px;
@@ -1932,7 +1932,7 @@ body {
 
 .ck-fine { font-size: 10px; color: #999; line-height: 1.55; margin: 12px 0 0; }
 
-/* 浮窗内换新方式表单信息（只读展示） */
+/* 浮窗内回收方式表单信息（只读展示） */
 .ck-ex-form {
   background: #fafafb; border-radius: 10px; padding: 4px 12px; margin-top: 4px;
 }
@@ -2372,13 +2372,13 @@ body {
     <div class="bind-note">绑定后返换新补贴，于旧机回收成功后返还；旧机回收款按回收单正常返还，若回收单取消或质检不通过，换新补贴随之取消。</div>
   </div>
 
-  <!-- 换新方式（估价流程） -->
+  <!-- 回收方式（估价流程） -->
   <div class="order-card" id="wayCard">
     <div class="card-head">
-      <div class="title">换新方式</div>
+      <div class="title">回收方式</div>
     </div>
 
-    <!-- 收款方式：置于「换新方式」字眼下方、tab 签之上 -->
+    <!-- 收款方式：置于「回收方式」字眼下方、tab 签之上 -->
     <div class="pay-row" id="payWayEntry" role="button" aria-label="收款方式" style="margin:12px 14px 8px;border-bottom:1px solid #f0f0f0;padding-bottom:12px;">
       <span class="lbl">收款方式</span>
       <span class="pay-link">
@@ -3028,7 +3028,7 @@ body {
     setTimeout(openCondPage, 280);
   });
 
-  // 换新方式：tab 切换 + 步骤时间线 + 表单
+  // 回收方式：tab 切换 + 步骤时间线 + 表单
   const STEP_DATA = {
     home: {
       label1: '工程师上门',
@@ -3157,7 +3157,7 @@ body {
       document.getElementById('ckBindAmt').textContent = fmt(subsidy);
       document.getElementById('ckBindNo').textContent = boundRO.id;
       document.getElementById('ckBindSubsidy').textContent = '¥' + fmt(subsidy) + ' · 绑定后返';
-      document.getElementById('ckPayNote').innerHTML = '绑定后返换新补贴 ¥' + fmt(subsidy);
+      document.getElementById('ckPayNote').innerHTML = '预估旧机返 ¥3,750，换新补贴 ¥' + fmt(subsidy);
       document.getElementById('ckOldName').textContent = boundRO.name;
       document.getElementById('ckOldSub').textContent = boundRO.sub;
     } else {
@@ -3222,7 +3222,7 @@ body {
       return;
     }
     syncCkWay();
-    // 回填换新方式表单信息
+    // 回填回收方式表单信息
     const isHome = currentWay === 'home';
     const exName = document.getElementById(isHome ? 'exNameHome' : 'exNameMail');
     const exPhone = document.getElementById(isHome ? 'exPhoneHome' : 'exPhoneMail');
