@@ -3157,7 +3157,7 @@ body {
       document.getElementById('ckBindAmt').textContent = fmt(subsidy);
       document.getElementById('ckBindNo').textContent = boundRO.id;
       document.getElementById('ckBindSubsidy').textContent = '¥' + fmt(subsidy) + ' · 绑定后返';
-      document.getElementById('ckPayNote').innerHTML = '预估旧机返 ¥3,750，换新补贴 ¥' + fmt(subsidy);
+      document.getElementById('ckPayNote').innerHTML = '预估旧机返 ¥' + fmt(base) + '，换新补贴 ¥' + fmt(subsidy);
       document.getElementById('ckOldName').textContent = boundRO.name;
       document.getElementById('ckOldSub').textContent = boundRO.sub;
     } else {
@@ -3171,7 +3171,7 @@ body {
     // 合计
     document.getElementById('ckTotalYouhui').textContent = '-¥' + fmt(youhui);
     document.getElementById('ckPayAmount').textContent = fmt(finalPay);
-    if (!boundRO) document.getElementById('ckReturn').textContent = '￥' + base;
+    if (!boundRO) document.getElementById('ckReturn').textContent = '￥' + fmt(base);
   }
 
   function openCheckout() {
