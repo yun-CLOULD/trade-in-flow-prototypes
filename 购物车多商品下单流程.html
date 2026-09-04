@@ -1057,7 +1057,7 @@ body {
       <div class="order-card">
         <div class="card-head">
           <div class="title">旧品信息</div>
-          <span class="card-action" id="tiEditCondition" onclick="editConditionFromTradein()">修改机况 ›</span>
+          <span class="card-action" id="tiEditCondition" onclick="editConditionFromTradein()">修改旧机 ›</span>
         </div>
         <div class="old-item">
           <div class="thumb">📱</div>
@@ -1067,7 +1067,7 @@ body {
           </div>
           <div class="price-side">
             <div class="p" id="tiOldPrice">¥8,250</div>
-            <div class="hint">回收后返</div>
+            <div class="hint">预估回收后返</div>
           </div>
         </div>
       </div>
@@ -1488,7 +1488,7 @@ function renderRecycle(){
             </div>
           </div>
         </div>
-        <div class="ts-rebate">旧品回收后返<span class="v"> ¥${fmt(estForP)}</span>，换新补贴<span class="v"> ¥${fmt(oldCount * SUBSIDY)}</span></div>
+        <div class="ts-rebate">旧品预估回收后返<span class="v"> ¥${fmt(estForP)}</span>，换新补贴<span class="v"> ¥${fmt(oldCount * SUBSIDY)}</span></div>
         <div class="ts-section-title">旧品回收信息</div>
         <div class="ts-old-list">
           ${olds.map(o => oldBlock(p, o)).join('')}

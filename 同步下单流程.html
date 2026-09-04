@@ -2309,7 +2309,7 @@ body {
   <div class="order-card" id="oldCard" style="margin-top:8px;">
     <div class="card-head">
       <div class="title">旧品信息</div>
-      <span class="card-action" id="oldCardEditCondition">修改机况 ›</span>
+      <span class="card-action" id="oldCardEditCondition">修改旧机 ›</span>
     </div>
 
     <div class="old-item" style="margin-top:4px;">
@@ -2320,7 +2320,7 @@ body {
       </div>
       <div class="price-side">
         <div class="p" id="orderOldAmt">¥3,750</div>
-        <div class="hint">回收后返</div>
+        <div class="hint">预估回收后返</div>
       </div>
     </div>
   </div>
@@ -3166,7 +3166,7 @@ body {
   if (oldCardEditBtn) {
     oldCardEditBtn.addEventListener('click', () => {
       if (boundRO) {
-        showToast('已绑定回收单，无需修改机况');
+        showToast('已绑定回收单，无需修改旧机');
         return;
       }
       closeCheckout();
