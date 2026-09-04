@@ -240,68 +240,27 @@ body {
 }
 
 /* —— 核心：以旧换新入口 —— */
+/* —— 顶部入口卡：直接用 APP 端整图（865×155）—— */
 .tradein-entry {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: linear-gradient(95deg, #fff5f3 0%, #fffaf8 100%);
-  border: 1px solid #ffd1c4;
-  border-radius: 10px;
-  padding: 12px;
+  display: block;
   margin-top: 10px;
   position: relative;
   cursor: pointer;
+  border-radius: 12px;
+  overflow: hidden;
   transition: transform 0.15s, box-shadow 0.15s;
+  -webkit-tap-highlight-color: transparent;
 }
 .tradein-entry:active {
   transform: scale(0.98);
-  box-shadow: 0 2px 8px rgba(225,37,27,0.08);
+  box-shadow: 0 2px 8px rgba(230,0,18,0.12);
 }
-.tradein-icon {
-  width: 40px; height: 40px;
-  background: linear-gradient(135deg, #ff5757 0%, #e1251b 100%);
-  border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  color: #fff;
-  font-size: 20px;
-  flex-shrink: 0;
-  box-shadow: 0 4px 10px rgba(225,37,27,0.25);
-}
-.tradein-info { flex: 1; min-width: 0; }
-.tradein-title-row {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 15px;
-  font-weight: 600;
-  color: #1a1a1a;
-  margin-bottom: 4px;
-}
-.new-badge {
-  font-size: 10px;
-  color: #fff;
-  background: linear-gradient(90deg, #ff7800, #ffae00);
-  padding: 1px 6px;
-  border-radius: 8px 2px 8px 2px;
-  font-weight: 600;
-  letter-spacing: 0.3px;
-}
-.tradein-sub {
-  display: flex;
-  gap: 8px;
-  font-size: 11px;
-  color: #999;
-}
-.tradein-sub b { color: #e1251b; font-weight: 500; }
-.tradein-sub .dot::before {
-  content: '·';
-  margin-right: 4px;
-  color: #e1251b;
-}
-.tradein-arrow {
-  color: #ccc;
-  font-size: 18px;
-  flex-shrink: 0;
+.tradein-entry img.tradein-banner {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  pointer-events: none;
 }
 
 /* —— 评论 —— */
@@ -2072,19 +2031,8 @@ body {
   </div>
 
   <!-- 核心互动入口 -->
-  <div class="tradein-entry" id="tradeinTrigger" role="button" aria-label="以旧换新">
-    <div class="tradein-icon">♻</div>
-    <div class="tradein-info">
-      <div class="tradein-title-row">
-        以旧换新 <span class="new-badge">补贴15%</span>
-      </div>
-      <div class="tradein-sub">
-        <span><b>高价</b>回收</span>
-        <span class="dot"><b>免费</b>邮寄</span>
-        <span class="dot"><b>极速</b>回款</span>
-      </div>
-    </div>
-    <div class="tradein-arrow">›</div>
+  <div class="tradein-entry" id="tradeinTrigger" role="button" aria-label="以旧换新，高价回收">
+    <img class="tradein-banner" src="assets/tradein-banner.png" alt="以旧换新，高价回收 — 多品牌回收，旧物抵现，极速到账">
   </div>
 
   <!-- 服务 / 配送 -->
